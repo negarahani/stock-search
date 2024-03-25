@@ -1,0 +1,21 @@
+
+
+
+.search-bar-container{
+    background: white;
+}
+
+.mdc-text-field--outlined .mat-mdc-form-field-infix,
+.mdc-text-field--no-label .mat-mdc-form-field-infix {
+    background-color: white !important;
+}
+
+.mat-mdc-text-field-wrapper{
+    background-color: white !important;
+}
+
+.mat-mdc-text-field-wrapper .form-control:focus {
+    border-color: transparent !important;
+    box-shadow: none !important; 
+}
+

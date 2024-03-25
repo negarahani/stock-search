@@ -1,0 +1,7 @@
+<p>watchlist works!</p>
+
+<div class="alert alert-light alert-dismissible" *ngFor="let item of watchlistList" (click)="searchClickedTicker(item.tickerSymbol)" style="cursor: pointer;">
+    <button class="btn-close" type="button" data-bs-dismiss="alert" (click)="removeFromWatchlist(item.tickerSymbol); $event.stopPropagation();"></button>
+    <p>watchlist item 1: {{item.tickerSymbol}} and {{item.companyName}}</p>
+</div>
+

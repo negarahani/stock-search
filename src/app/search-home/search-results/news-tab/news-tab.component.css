@@ -1,0 +1,7 @@
+.box{
+    padding: 10px;
+}
+
+.modal-backdrop{
+    z-index:0;
+  }

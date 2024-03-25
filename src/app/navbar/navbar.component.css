@@ -1,0 +1,4 @@
+.active {
+    border: 2px solid #FFFFFF; /* Blue border for active item */
+    border-radius: 0.5rem; /* Rounded border */
+  }

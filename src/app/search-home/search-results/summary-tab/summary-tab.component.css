@@ -1,0 +1,19 @@
+.box{
+    background-color: lightblue;
+    border: 1px solid blue;
+    min-height: 50px;
+    padding: 10px 15px;
+}
+
+
+  .table.no-border tr,
+  .table.no-border td,
+  .table.no-border th {
+    border: none;
+  }
+
+  .table.no-border th {
+    text-align: right;
+  }
+
+ 

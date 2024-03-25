@@ -1,0 +1,137 @@
+
+<div #results_section *ngIf="isDataAvailable() else error_section">
+    <div #Top_Row>
+        <!--button style="border: none; background: none;" (click)="toggleSelect()">
+            <svg width="24" height="24" viewBox="0 0 24 24" id="star_filled" data-name="star filled" xmlns="http://www.w3.org/2000/svg">
+                <rect id="Rectangle_4" data-name="Rectangle 4" width="24" height="24" fill="none"/>
+               
+                <path id="Star" d="M10,15,4.122,18.09l1.123-6.545L.489,6.91l6.572-.955L10,0l2.939,5.955,6.572.955-4.755,4.635,1.123,6.545Z" [style.fill]="starFill" transform="translate(2 3)" stroke="#000000" stroke-miterlimit="10" stroke-width="1.5"/>
+            </svg>
+        </button-->
+
+        <!-- start of portfolio section -->
+        <!--div class="card">
+            <div class="card-body">
+                <div style="display: inline-block; margin: 10px;"><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="buyStock()">Buy</a></div>
+                <div style="display: inline-block" *ngIf="isInPortfolio"><a class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="sellStock()" >Sell</a></div>
+            </div>
+        </div-->
+
+        <!-- Buy Modal -->
+        <div #buyModal class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" [formGroup]="buyForm">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">  {{this.searchService.searchedTicker}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p>Current Price: {{this.portfolioCurPrice}}</p> 
+                <p>Money in Wallet: {{ this.searchService.cashBalance }} </p>
+                <mat-form-field appearance="outline">
+                    <input
+                    type="number"
+                    class="form-control"
+                    matInput
+                    name="value"
+                    formControlName="value">
+                </mat-form-field>
+                </div>
+                <div style="color:red" *ngIf="showBuyError">Not enough money in wallet!</div>
+                <div class="modal-footer">
+                <div>total: {{this.totalCostToBuy}}</div>
+                <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalBuy()" [disabled]="this.hideBuyButton">Buy</button></div>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <!-- Sell Modal -->
+        <div #sellModal class="modal fade" id="sellModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" [formGroup]="sellForm">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">  {{this.searchService.searchedTicker}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <p>Current Price: {{this.portfolioCurPrice}}</p> 
+                <p>Money in Wallet: {{ this.searchService.cashBalance }} </p>
+                <mat-form-field appearance="outline">
+                    <input
+                    type="number"
+                    class="form-control"
+                    matInput
+                    name="value"
+                    formControlName="value">
+                </mat-form-field>
+                </div>
+                <div style="color:red" *ngIf="showSellError">You cannot sell the stocks that you don't have!</div>
+                <div class="modal-footer">
+                <div>total: {{this.totalCostToSell}}</div>
+                <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalSell()" [disabled]="this.hideSellButton">Sell</button></div>
+                </div>
+            </div>
+            </div>
+        </div>
+        
+        <!-- end of portfolio section -->
+       
+
+        <div class="container col-lg-6">
+            <div class="row" >
+              <div class="col bg-light" >
+                 <div class="d-flex justify-content-center">
+                    <p style="margin: 0;">{{searchService.responseData.ticker}}</p>
+                    <button style="border: none; background: none;" (click)="toggleSelect()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" id="star_filled" data-name="star filled" xmlns="http://www.w3.org/2000/svg">
+                            <rect id="Rectangle_4" data-name="Rectangle 4" width="24" height="24" fill="none"/>
+                            <!--on the next line we have [style.fill]="starFill"-->
+                            <path id="Star" d="M10,15,4.122,18.09l1.123-6.545L.489,6.91l6.572-.955L10,0l2.939,5.955,6.572.955-4.755,4.635,1.123,6.545Z" [style.fill]="starFill" transform="translate(2 3)" stroke="#000000" stroke-miterlimit="10" stroke-width="1.5"/>
+                        </svg>
+                    </button>
+                </div>
+                 <div class="d-flex justify-content-center" style="text-align: center;">{{searchService.responseData.name}}</div>
+                 <div class="d-flex justify-content-center" style="text-align: center;">{{searchService.responseData.exchange}}</div>
+                 <div class="d-flex justify-content-center">
+                    <div style="display: inline-block;" class="mx-2"><a class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="buyStock()">Buy</a></div>
+                    <div style="display: inline-block" class="mx-2" *ngIf="isInPortfolio"><a class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="sellStock()" >Sell</a></div>
+                </div>
+              </div>
+              <div class="col bg-primary" >
+                <div class="d-flex justify-content-center" >
+                    <img src={{searchService.responseData.logo}} alt="Company Logo" class="img-fluid" style="max-width: 30%; height: auto;">
+                </div>
+              </div>
+              <div class="col bg-light ">
+                <div class="d-flex justify-content-center" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">{{searchService.quoteData?.c}}</div>
+                <div class="d-flex justify-content-center">
+                    <img *ngIf="searchService.quoteData?.d < 0" src="assets/RedArrowDown.png" alt="Red Arrow" class="img-fluid" style="max-width: 8%; height: auto;">
+                    <img *ngIf="searchService.quoteData?.d > 0" src="assets/GreenArrowUp.png" alt="Green Arrow" class="img-fluid" style="max-width: 8%; height: auto;">
+                    <p style="margin: 0;" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">{{searchService.quoteData?.d}} ({{searchService.quoteData?.dp}})</p>
+                </div>
+                <div class="d-flex justify-content-center" style="text-align: center;">{{ formatTime(searchService.quoteData?.t) }}</div>
+              </div>
+            </div>
+        </div>
+
+        <div class="container text-success d-flex justify-content-center" *ngIf="isMarketOpen(searchService.quoteData?.t)">Market is Open</div>
+        <div class="container text-danger d-flex justify-content-center" *ngIf="!isMarketOpen(searchService.quoteData?.t)">Market Closed on {{ formatTime(searchService.quoteData?.t) }}</div>
+    </div>
+    
+    <div class="container col-lg-8">
+        <mat-tab-group #bottom_row>
+            <mat-tab label="Summary"> <app-summary-tab></app-summary-tab> </mat-tab>
+            <mat-tab label="Top News"><app-news-tab></app-news-tab> </mat-tab>
+            <mat-tab label="Charts"> <app-charts-tab></app-charts-tab> </mat-tab>
+            <mat-tab label="Insights"><app-insights-tab></app-insights-tab></mat-tab>
+        </mat-tab-group>
+    </div>
+   
+
+</div>
+
+<ng-template #error_section>
+    <div >No data found. Please enter a valid Ticker</div>
+</ng-template>
+

@@ -1,0 +1,33 @@
+
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css">
+<div style="text-align: center;">
+    <h3 style="font-size: 30px; font-weight: lighter; margin-top: 50px;">STOCK SEARCH</h3>
+</div>
+
+<form #formRef="ngForm" class="form-inline container" (ngSubmit)="searchTicker(searchInput.value)" #form="ngForm" [formGroup]="formGroup" style="display:flex; justify-content: center; margin-top: 20px;">
+    <mat-form-field style="width: 300px;" class="search-bar" appearance="outline">
+        <div style="display: flex;align-items: center; height: 20px;" class="search-bar-container" >
+            <input #searchInput class="form-control" placeholder="Enter Stock Ticker Symbol" 
+            matInput [matAutocomplete]="auto" formControlName = "tickerValue" value="selectedTicker" style="background-color: white;" >
+            <mat-autocomplete #auto="matAutocomplete">
+                <mat-option *ngFor="let item of ACArray" [value]="item.symbol" (click)="selectOption(item.symbol)"> {{item.symbol}} | {{item.description}} </mat-option>
+            </mat-autocomplete>
+            <button mat-icon-button type="submit" style="size: 20px;"> 
+                <mat-icon style="color: #302cac">search</mat-icon>
+            </button>
+            
+            <button mat-icon-button (click)="searchInput.value = '' ; clearResults()" style="size: 20px;"> 
+                <mat-icon style="color: #302cac;">close</mat-icon>
+            </button>
+        </div>
+    </mat-form-field>
+</form>
+
+
+<!--app-search-results #search_results *ngIf="responseData && !resultsCleared"  [myresponseData]="responseData" [myQuoteData]="quoteData"></app-search-results-->
+<!--on the next line[starFill]="myStarFill"-->
+<app-search-results #search_results *ngIf="searchService.responseData && !this.resultsCleared">
+</app-search-results>
+<!--p>Last updated: {{ currentTime }}</p-->
+
+

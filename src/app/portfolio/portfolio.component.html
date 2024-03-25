@@ -1,0 +1,94 @@
+<p>portfolio works!</p>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<h1> My Portfolio </h1>
+<p>Money in Wallet: {{ '$' }}{{this.searchService.cashBalance }}</p>
+<div class="card" *ngFor="let item of this.completeArray">
+    <div class="card-header">
+      {{item.ticker  }}     {{item.company_name}}
+    </div>
+    <div class="card-body">
+      
+      <div class="second_column">
+        <p class="card-text">quantity: {{item.quantity}}</p>
+        <p class="card-text">Avg.Cost/ Share: {{item.average_cost_share}}</p>
+        <p class="card-text">Total Cost: {{item.total_cost}}</p>
+      </div>
+      
+
+      <div [ngStyle]="{'color': (item.change > 0) ? '#008000' : (item.change < 0) ? '#FF0000' : '#000000'}">
+        <p class="card-text">Change: {{item.change}}</p>
+        <p class="card-text">Current Price: {{item.current_price}}</p>
+        <p class="card-text">Market Value: {{item.market_value}}</p>
+      </div>
+      
+    </div>
+    <div class="card-footer text-muted">
+        <div style="display: inline-block; margin-right: 10px;"><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="this.selectedItem = item ;this.buyStock(this.selectedItem)">Buy</a></div>
+        <div style="display: inline-block"><a class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="this.selectedItem = item; this.sellStock(this.selectedItem)">Sell</a></div>
+    </div>
+</div>
+
+
+
+  <!-- Buy Modal -->
+  <div #buyModal class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" [formGroup]="buyForm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">  {{this.selectedTicker}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Current Price: {{this.selectedCurPrice}}</p> 
+          <p>Money in Wallet: {{ this.searchService.cashBalance }} </p>
+          <mat-form-field appearance="outline">
+            <input
+              type="number"
+              class="form-control"
+              matInput
+              name="value"
+              formControlName="value">
+          </mat-form-field>
+        </div>
+        <div style="color:red" *ngIf="showBuyError">Not enough money in wallet!</div>
+        <div class="modal-footer">
+          <div>total: {{this.totalCostToBuy}}</div>
+          <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalBuy(this.selectedItem)" [disabled]="this.hideBuyButton">Buy</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   <!-- Sell Modal -->
+  <div #sellModal class="modal fade" id="sellModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" [formGroup]="sellForm">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">  {{this.selectedTicker}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Current Price: {{this.selectedCurPrice}}</p> 
+          <p>Money in Wallet: {{ this.searchService.cashBalance }} </p>
+          <mat-form-field appearance="outline">
+            <input
+              type="number"
+              class="form-control"
+              matInput
+              name="value"
+              formControlName="value">
+          </mat-form-field>
+        </div>
+        <div style="color:red" *ngIf="showSellError">You cannot sell the stocks that you don't have!</div>
+        <div class="modal-footer">
+          <div>total: {{this.totalCostToSell}}</div>
+          <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalSell(this.selectedItem)" [disabled]="this.hideSellButton">Sell</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+
+
+  
