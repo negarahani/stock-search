@@ -12,19 +12,75 @@ import { StockChart } from 'angular-highcharts';
 })
 export class InsightsTabComponent implements OnInit{
 
+  sentimentsData: any;
+  sentimentsDataProcessed: any;
+
   stock1!: StockChart;
   recomData: any;
 
   stock2!: StockChart;
   earningsData: any;
 
-  constructor(private service: AppServiceService, private searchService: SearchService){}
+  constructor(private service: AppServiceService, public searchService: SearchService){}
 
 
   ngOnInit() {
+    this.getSentimentsData(this.searchService.searchedTicker);
+
     this.createRecomChart(this.searchService.searchedTicker);
 
     this.createEarningsChart(this.searchService.searchedTicker);
+  }
+
+  //get insider sentiments data
+  async getSentimentsData(tickerSymbol: string){
+    
+    try{
+      const data: any = await this.service.getSentiments(tickerSymbol);
+      if (data){
+        this.sentimentsData = data.data;
+        //console.log('insider sentiments data is:', this.sentimentsData);
+        
+        //processing the Sentiments data
+            let totalMSPR = 0;
+            let positiveMSPR = 0;
+            let negativeMSPR = 0;
+            let totalChange = 0;
+            let positiveChange = 0;
+            let negativeChange = 0;
+
+            this.sentimentsData.forEach((item:any) => {
+                // MSPR calculation
+                totalMSPR += item.mspr;
+                if (item.mspr > 0) {
+                    positiveMSPR += item.mspr;
+                } else if (item.mspr < 0) {
+                    negativeMSPR += item.mspr;
+                }
+
+                // Change Calculation
+                totalChange += item.change;
+                if (item.change > 0) {
+                    positiveChange += item.change;
+                } else if (item.change < 0) {
+                    negativeChange += item.change;
+                }
+            });
+
+            this.sentimentsDataProcessed = {
+              totalMSPR: totalMSPR,
+              positiveMSPR: positiveMSPR,
+              negativeMSPR: negativeMSPR,
+              totalChange: totalChange,
+              positiveChange: positiveChange,
+              negativeChange: negativeChange
+          };
+          console.log('processed sentiment data is', this.sentimentsDataProcessed);
+      }
+    }
+    catch(error){
+      console.log('Error fetching insdier sentiments data',error);
+    }
   }
 
   //recommendation section
@@ -52,7 +108,7 @@ export class InsightsTabComponent implements OnInit{
     
     const categories: string[] = this.recomData.map((item: any) => {
       //console.log('Period:', item.period); // Print the value of item.period
-      return item.period;
+      return item.period.substring(0, 7); // Extract YYYY-MM part
     });
     
     const series =  [
@@ -188,15 +244,28 @@ async createEarningsChart(ticker:string){
       opposite: false
     },
     series: [{
-      type: 'line',
+      type: 'spline',
       name: 'Actual',
-      data: actualData
+      data: actualData,
+      marker: {
+        enabled: true,
+        symbol: 'circle', 
+        radius: 4
+      }
     },{
-      type: 'line',
+      type: 'spline',
       name: 'Estimate',
-      data: estimateData
+      data: estimateData,
+      marker: {
+        enabled: true,
+        symbol: 'circle', 
+        radius: 4
+      }
     }
-  ]
+  ],
+  legend: {
+    enabled: true
+  }
   });
 
 }

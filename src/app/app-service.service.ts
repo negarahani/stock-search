@@ -11,8 +11,11 @@ export class AppServiceService {
 
 
   private baseUrl = 'http://localhost:8080/';
+  //private baseUrl = '/' //added in when preparing for deployment
+  
 
   autoUpdateInterval  : any;
+
   
   constructor(private http: HttpClient) { }
 
@@ -20,6 +23,10 @@ export class AppServiceService {
     return this.http.get(`${this.baseUrl}search-company/${tickerSymbol}`);
   }
   
+  async getDataForPF(tickerSymbol: string){
+    return lastValueFrom(this.http.get(`${this.baseUrl}search-company/${tickerSymbol}`));
+  }
+
   async getStockQuote(tickerSymbol: string){
     return await lastValueFrom(this.http.get(`${this.baseUrl}search-quote/${tickerSymbol}`));
   }
@@ -48,6 +55,16 @@ export class AppServiceService {
     }
     catch(error){
       console.log('an error occured while fetching historiacal chart data: ', error);
+      return null;
+    }
+  }
+
+  async getSentiments(tickerSymbol: string){
+    try{
+      return await lastValueFrom(this.http.get(`${this.baseUrl}search-sentiments/${tickerSymbol}`));
+    }
+    catch(error){
+      console.log('an error occurred while fetching insider sentiments data', error);
       return null;
     }
   }
@@ -106,6 +123,10 @@ export class AppServiceService {
       console.log(error);
       return null;
     }
+  }
+
+  async getData2(tickerSymbol: string){
+    return lastValueFrom(this.http.get(`${this.baseUrl}search-company/${tickerSymbol}`));
   }
 
   async getStockQuote2(tickerSymbol: string){

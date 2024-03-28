@@ -1,4 +1,5 @@
 
+
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SearchService } from '../search.service';
@@ -17,6 +18,12 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 })
 export class PortfolioComponent implements OnInit {
 
+  //related to spinner
+  isBalanceLoading: boolean = true;
+  isPortfolioLoading: boolean = true;
+
+  portfolioEmptyAlert: boolean = false;
+
 
   selectedItem: any;
   selectedTicker: any;
@@ -29,13 +36,14 @@ export class PortfolioComponent implements OnInit {
   buyForm!: FormGroup;
   hideBuyButton: boolean =  true; //I mean disable!
   showBuyError: boolean = false;
+  stockBoughtAlert: boolean = false;
 
   totalCostToSell: any = 0;
   quantityToSell: any = 0;
   sellForm!: FormGroup;
   hideSellButton: boolean = true; //I mean disable!
   showSellError: boolean = false;
-
+  stockSoldAlert: boolean = false;
 
   constructor(public searchService: SearchService, private service: AppServiceService, private route: ActivatedRoute, private fb: FormBuilder){
 
@@ -68,13 +76,21 @@ export class PortfolioComponent implements OnInit {
   }
 
   async fetchBalanceData() {
-    let data: any = await this.service.getBalanceData();
-    if (data.length > 0) { // Check if data array is not empty
-      this.searchService.cashBalance = data[0].cash_balance;
-      console.log('Cash balance is:', this.searchService.cashBalance);
-    } else {
-      console.log('No balance data found.');
+    this.isBalanceLoading = true;
+    try{
+      let data: any = await this.service.getBalanceData();
+      if (data.length > 0) { // Check if data array is not empty
+        this.searchService.cashBalance = data[0].cash_balance;
+        console.log('Cash balance is:', this.searchService.cashBalance);
+      } else {
+        console.log('No balance data found.');
+      }
+    } catch(error){
+      console.error('Error fetching balance data:', error);
+    } finally {
+      this.isBalanceLoading = false; 
     }
+    
   }
 
   async fetchData(){
@@ -83,37 +99,53 @@ export class PortfolioComponent implements OnInit {
     console.log(data);
     if (data){
       this.searchService.portfolioList = data;
+
+      if (this.searchService.portfolioList.length == 0) {
+        this.portfolioEmptyAlert = true;
+      } else {
+        this.portfolioEmptyAlert = false;
+      }
+
     }
   }
   
   async populateData(){
+    this.isPortfolioLoading = true;
 
-    this.completeArray = [];
+    try{
+      this.completeArray = [];
 
-    await this.fetchData();
-    console.log("portfolio list is", this.searchService.portfolioList);
+      await this.fetchData();
+      console.log("portfolio list is", this.searchService.portfolioList);
 
-    if (this.searchService.portfolioList && Object.keys(this.searchService.portfolioList).length > 0){
-      for (const item of this.searchService.portfolioList){
-        let quoteData: any = await this.service.getStockQuote2(item.ticker);
-        console.log('quote data it:', quoteData);
-        //values are calculated dynamically
-        let curPrice = quoteData.c;
-        let avgCostShare = item.total_cost / item.quantity;
-        let change = avgCostShare - curPrice;
-        let marketValue = item.quantity * curPrice;
+      if (this.searchService.portfolioList && Object.keys(this.searchService.portfolioList).length > 0){
+        for (const item of this.searchService.portfolioList){
+          let quoteData: any = await this.service.getStockQuote2(item.ticker);
+          console.log('quote data it:', quoteData);
+          //values are calculated dynamically
+          let curPrice = quoteData.c;
+          let avgCostShare = item.total_cost / item.quantity;
+          let change = avgCostShare - curPrice;
+          let marketValue = item.quantity * curPrice;
 
-        const curItem = {"ticker":item.ticker, "company_name": item.company_name, "quantity": item.quantity, "total_cost": item.total_cost, 
-        "current_price": quoteData.c, "average_cost_share": avgCostShare, "change": change, "market_value": marketValue};
-        
-        this.completeArray.push(curItem);
-        
+          const curItem = {"ticker":item.ticker, "company_name": item.company_name, "quantity": item.quantity, "total_cost": item.total_cost, 
+          "current_price": quoteData.c, "average_cost_share": avgCostShare, "change": change, "market_value": marketValue};
+          
+          this.completeArray.push(curItem);
+          
 
+        }
+        console.log('updated completearray is: ', this.completeArray);
+      } else {
+        console.log('no item found in portfolio');
       }
-      console.log('updated completearray is: ', this.completeArray);
-    } else {
-      console.log('no item found in portfolio');
+    } catch (error){
+      console.error('Error fetching portfolio data:', error);
+    } finally {
+      this.isPortfolioLoading = false; 
     }
+
+    
   }
 
   async buyStock(itemToBuy: any){
@@ -171,6 +203,10 @@ export class PortfolioComponent implements OnInit {
     
     await this.populateData();
     
+    this.stockBoughtAlert = true;
+    setTimeout(() => {
+      this.stockBoughtAlert = false;
+    }, 5000); 
    
 }
 
@@ -234,6 +270,11 @@ export class PortfolioComponent implements OnInit {
     await this.service.updateBalanceData(this.searchService.cashBalance);
 
     await this.populateData();
+
+    this.stockSoldAlert = true;
+    setTimeout(() => {
+      this.stockSoldAlert = false;
+    }, 5000);
 
   }
 

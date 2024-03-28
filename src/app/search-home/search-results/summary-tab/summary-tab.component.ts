@@ -35,7 +35,7 @@ export class SummaryTabComponent {
   async getCompanyPeersData(ticker: string){
     let data: any = await this.service.getCompanyPeers(ticker);
     if (data){
-      console.log('peers data is:', data);
+      //console.log('peers data is:', data);
       this.peersArray = data;
     }
   }
@@ -68,14 +68,14 @@ export class SummaryTabComponent {
 
     await this.getQuoteData(ticker);
     
-    console.log('fromDate is', this.fromDateFormatted);
-    console.log('toDate is', this.toDateFormatted);
+    //console.log('fromDate is', this.fromDateFormatted);
+    //console.log('toDate is', this.toDateFormatted);
     
     let data = await this.service.getHourlyPrice(ticker, this.fromDateFormatted, this.toDateFormatted);
     console.log('hourly price data from service is',data);
     if (data){
       this.resultsData = (data as { results: any }).results;
-      console.log(this.resultsData);
+      //console.log(this.resultsData);
       this.priceArray = this.resultsData.map((point: any) => ([point.t, point.c])); // Create array of tuples
       //console.log('priceArray:', this.priceArray);
     }  
@@ -121,6 +121,9 @@ export class SummaryTabComponent {
   }
 
 
- 
+  searchClickedTicker(ticker: string){
+    console.log('peer item was clicked. peer:', ticker);
+    this.searchService.sendTickerClicked(ticker);
+  }
 
 }

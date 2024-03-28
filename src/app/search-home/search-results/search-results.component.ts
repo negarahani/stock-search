@@ -18,6 +18,8 @@ export class SearchResultsComponent implements OnChanges, OnInit{
   //related to Watchlist
   isInWatchList: boolean = false;
   starFill: string = 'white';
+  addedWatchlistAlert: boolean = false;
+  removedWatchlistAlert: boolean = false;
 
   //related to portfolio
   completeArray: any[] = [];
@@ -32,13 +34,14 @@ export class SearchResultsComponent implements OnChanges, OnInit{
   buyForm!: FormGroup;
   hideBuyButton: boolean =  true; //I mean disable!
   showBuyError: boolean = false;
+  stockBoughtAlert: boolean = false;
 
   totalCostToSell: any = 0;
   quantityToSell: any = 0;
   sellForm!: FormGroup;
   hideSellButton: boolean = true; //I mean disable!
   showSellError: boolean = false;
-  
+  stockSoldAlert: boolean = false;
 
 
   constructor(public searchService: SearchService, private service: AppServiceService, private route: ActivatedRoute, private fb: FormBuilder, private datePipe: DatePipe){
@@ -135,6 +138,12 @@ isMarketOpen(timestamp: number): boolean {
           response => {
             //console.log('Favorite stock added successfully:', response);
             this.isInWatchList = true;
+            this.addedWatchlistAlert = true;
+
+            //after five seconds close the alert
+            setTimeout(() => {
+              this.addedWatchlistAlert = false;
+            }, 5000); 
             
           },
           error => {
@@ -149,7 +158,13 @@ isMarketOpen(timestamp: number): boolean {
           response => {
             //console.log('Favorite stock removed successfully:', response);
             this.isInWatchList = false;
-            
+            this.removedWatchlistAlert = true;
+
+            //after five seconds close the alert
+            setTimeout(() => {
+              this.removedWatchlistAlert = false;
+            }, 5000); 
+
           },
           error => {
             console.error('Error removing favorite stock:', error);
@@ -198,11 +213,12 @@ isMarketOpen(timestamp: number): boolean {
 
   //fetching the company name and current price (to becuase we need to use updatePortfolio)
   async fetchPortfolioData(){
-    
-    let companyData: any = await this.service.getData(this.searchService.searchedTicker);
+
+    let companyData: any = await this.service.getData2(this.searchService.searchedTicker);
     let quoteData: any = await this.service.getStockQuote2(this.searchService.searchedTicker);
     this.portfolioCurPrice = quoteData.c;
     this.portfolioName = companyData.name;
+    console.log('companyData in fetchporfoliodata is:', companyData);
   }
   
   async buyStock(){
@@ -258,6 +274,10 @@ isMarketOpen(timestamp: number): boolean {
 
     await this.fetchPortfolioList(); //to update the buy/sell button appearance
     
+    this.stockBoughtAlert = true;
+    setTimeout(() => {
+      this.stockBoughtAlert = false;
+    }, 5000); 
     // await this.fetchBalanceData(); why would I do it?
     
 }
@@ -320,6 +340,11 @@ isMarketOpen(timestamp: number): boolean {
 
     
     await this.fetchPortfolioList(); //to update the buy/sell button appearance but won't work!
+
+    this.stockSoldAlert = true;
+    setTimeout(() => {
+      this.stockSoldAlert = false;
+    }, 5000); 
     
     // await this.fetchBalanceData(); why would I do it?
     

@@ -18,6 +18,7 @@ export class NewsTabComponent implements OnInit{
     this.getTopNewsData(this.searchService.searchedTicker);
   }
 
+  
  
   
   async getTopNewsData(tickerSymbol: string){
@@ -53,4 +54,16 @@ export class NewsTabComponent implements OnInit{
     }
     
   }
+
+  // Converting timestamp to PST and format date
+  //datetime from finbub is in EST (UTC-5)
+  formatDate(timestamp: number): string {
+    const date = new Date(timestamp * 1000); //this has to be in milliseconds
+    // Converting to PST (UTC-8) by subtracting 3 hours in miliseconds
+    date.setTime(date.getTime() - (3 * 60 * 60 * 1000));
+    // Formatting the date as requested
+    return date.toLocaleString('en-US', { month: 'long', day: '2-digit', year: 'numeric' });
+  }
+
+  
 }

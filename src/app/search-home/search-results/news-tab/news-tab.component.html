@@ -34,11 +34,13 @@
         </div>
     </div>
 </div-->
+
+
   
 <div class="row">
     <div class="col-lg-6" *ngFor="let newsItem of filteredNews">
         <div class="box">
-            <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#newsModal" (click)="this.selectedItem = newsItem" role="button">
+            <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#newsModal" (click)="this.selectedItem = newsItem;" role="button">
                 <div class="row g-0">
                     <div class="col-md-4">
                         <img [src]="newsItem.image" class="img-fluid rounded-start" alt="News Image" style="padding: 10px;">
@@ -54,36 +56,46 @@
     </div>
 </div>
 
-<!-- News Modal -->
-<div #newsModal class="modal fade" style="z-index: 100000;" id="newsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+
+<div #newsModal class="modal fade" id="newsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">{{ selectedItem?.headline }}</h5>
+                <div>
+                    <h2 class="modal-title" id="exampleModalLabel">{{ selectedItem?.source }} </h2>
+                    <p >{{ formatDate(selectedItem?.datetime) }}</p>
+                </div>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <img [src]="selectedItem?.image" class="img-fluid rounded-start" alt="News Image" style="padding: 10px;">
+                <h2 class="modal-title" id="exampleModalLabel">{{ selectedItem?.headline }}</h2>
                 <p>{{ selectedItem?.summary }}</p>
+                <div>For more details click <a target="_blank" href="{{selectedItem?.url}}">here</a></div>
             </div>
+            <div class="card" style="margin: 10px;">
+                <div class="card-body">
+                    <p>Share</p>
+                    <div style="display: flex; gap: 10px;">
+                        <a class="twitter-share-button"  [href]="'https://twitter.com/intent/tweet?text=' + selectedItem?.headline +' ' +selectedItem?.url"
+                        target="_blank"> 
+                        <i class="fa-brands fa-x-twitter fa-2xl" style="color: #000000;"></i>
+                        </a>
+                        <div class="fb-share-button" 
+                         [attr.data-href]="selectedItem?.url" 
+                         data-layout="button_count">
+                        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u={{selectedItem?.url}}">
+                            <i class="fa-brands fa-square-facebook fa-2xl" style="color: #004dd1;"></i>
+                        </a>
+                        </div>
+                    </div>
+                    
+                
+                </div>
+              </div>
         </div>
     </div>
 </div>
 
-<!--div style="display: inline-block; margin-right: 10px;"><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" >Buy</a></div>
 
-
-<div #buyModal class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">  </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <p>Current Price:</p> 
-          <p>Money in Wallet: </p>
-        </div>
-      </div>
-    </div>
-  </div-->
+ 

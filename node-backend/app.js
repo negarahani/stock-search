@@ -9,12 +9,12 @@ app.use(express.json()); // Use JSON request bodies
 app.use(bodyParser.urlencoded({extended: true}) );
 
 
-
  // Listen to the App Engine-specified port, or 8080 otherwise
  const PORT = process.env.PORT || 8080;
  app.listen(PORT, () => {
    console.log(`Server listening on port ${PORT}...`);
  });
+
 
 // now we get data from FinHub API
 FINNHUB_API_KEY = 'cmsaabhr01qlk9b15o5gcmsaabhr01qlk9b15o60'
@@ -25,6 +25,7 @@ FINNHUB_BASE_URL_4 = 'https://finnhub.io/api/v1/stock/recommendation'
 FINNHUB_BASE_URL_5 = 'https://finnhub.io/api/v1/stock/earnings'
 FINNHUB_BASE_URL_6 = 'https://finnhub.io/api/v1/stock/peers'
 FINNHUB_BASE_URL_7 = 'https://finnhub.io/api/v1/company-news'
+FINNHUB_BASE_URL_8 = 'https://finnhub.io/api/v1/stock/insider-sentiment'
 
 POLYGON_API_KEY = 'H1yqa2g6YarOCvTqnQULhJS7WLPGSp_M'
 POLYGON_BASE_URL = 'https://api.polygon.io/v2/aggs'
@@ -101,7 +102,7 @@ app.get('/search-hourly-price/:tickerSymbol/:fromDate/:toDate', async (req, res)
     const fromDate = req.params.fromDate;
     const toDate = req.params.toDate;
     const apiUrl = `${POLYGON_BASE_URL}/ticker/${tickerSymbol}/range/1/hour/${fromDate}/${toDate}?adjusted=true&sort=asc&apiKey=${POLYGON_API_KEY}`;
-    console.log('hourly price url is:',apiUrl);
+    //console.log('hourly price url is:',apiUrl);
     const response = await axios.get(apiUrl);
     res.json(response.data);
   } catch(error){
@@ -119,8 +120,8 @@ app.get('/search-news/:tickerSymbol', async(req, res) => {
     //calculating today's date and one week before in YYYY-MM-DD format
     const toDate = new Date().toISOString().split('T')[0]; 
     const fromDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]; 
-    console.log('toDate is;', toDate);
-    console.log('fromDate is:', fromDate);
+    //console.log('toDate is;', toDate);
+    //console.log('fromDate is:', fromDate);
     const apiUrl = `${FINNHUB_BASE_URL_7}?symbol=${tickerSymbol}&from=${fromDate}&to=${toDate}&token=${FINNHUB_API_KEY}`;
 
     const response = await axios.get(apiUrl);
@@ -139,13 +140,13 @@ app.get('/search-chart/:tickerSymbol',async (req, res) =>{
 
   const toDate = new Date();
   toDate.setDate(toDate.getDate() - 1);
-  console.log('toDate is:',toDate);
+  //console.log('toDate is:',toDate);
   const toDateFormatted = toDate.getTime();
   
 
   const currentDate = new Date();
   const fromDate = new Date(currentDate.getFullYear() - 2, currentDate.getMonth(), currentDate.getDate() - 1);
-  console.log('fromDate is:',fromDate);
+  //console.log('fromDate is:',fromDate);
   const fromDateFormatted = fromDate.getTime();
 
 
@@ -161,6 +162,21 @@ app.get('/search-chart/:tickerSymbol',async (req, res) =>{
             res.status(500).json({ error: "An error occurred while fetching data from Polygon.io API." });
         });
   });
+
+//getting insider sentiments
+app.get('/search-sentiments/:tickerSymbol', async(req, res) => {
+  const tickerSymbol = req.params.tickerSymbol;
+
+  try {
+    const response = await axios.get(`${FINNHUB_BASE_URL_8}?symbol=${tickerSymbol}&from=2022-01-01&token=${FINNHUB_API_KEY}`);
+    res.json(response.data);
+  }
+  catch(error) {
+    console.error("Error fetching insider sentiments data:", error);
+    res.status(500).json({ error: "An error occurred while fetching data from FinHub API." });
+  }
+
+});
 
 
 //getting the recommendation trends data
@@ -192,7 +208,7 @@ app.get('/search-earnings/:tickerSymbol', async(req, res)=>{
 //setting up MongoDB
 
 const { MongoClient } = require('mongodb');
-const { from } = require('rxjs');
+
 
 const CONNECTION_STRING = `mongodb+srv://negar6868:${encodeURIComponent("8uzkNFYgSYa#!w9")}@cluster0.dq6yhnn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 const databaseName = 'HW3';
@@ -259,7 +275,7 @@ MongoClient.connect(CONNECTION_STRING)
     app.get('/api/wallet/getBalance', async (req, res) => {
       try {
         const balanceData = await collection.find({}).toArray();
-        console.log('Balance data:', balanceData);
+        //console.log('Balance data:', balanceData);
         res.json(balanceData);
       } catch (error) {
         console.error('Error fetching data:', error);

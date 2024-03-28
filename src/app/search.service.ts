@@ -32,6 +32,7 @@ export class SearchService {
   tickerClicked$ = this.tickerClickedSource.asObservable();
 
 
+
   constructor() {}
 
   //method to allow communication between watchlist and search-home component

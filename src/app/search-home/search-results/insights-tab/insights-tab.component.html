@@ -1,12 +1,46 @@
-<p>insights-tab works!</p>
 
-
-<div class="chart-container" style="display: flex; justify-content: space-between; margin: 20px;">
-    <div class="summary-chart">
-      <div [chart]="stock1"></div>
-    </div>
-    <div class="earnings-chart">
-        <div [chart]="stock2"></div>
-    </div>
+<div class="container col-lg-4" style="margin-top: 10px;">
+  <h2 style="text-align: center;">Insider Sentiments </h2>
+  <table class="table">
+    <tbody>
+      <tr>
+        <th scope="col" class="text-center">{{this.searchService.responseData.name}}</th>
+        <th scope="col" class="text-center">MSPR</th>
+        <th scope="col" class="text-center">Change</th>
+      </tr>
+    </tbody>
+    <tbody>
+      <tr>
+        <th scope="row" class="text-center">Total</th>
+        <td class="text-center">{{this.sentimentsDataProcessed?.totalMSPR}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.totalChange}}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-center">Positive</th>
+        <td class="text-center">{{this.sentimentsDataProcessed?.positiveMSPR}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.positiveChange}}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-center">Negative</th>
+        <td class="text-center">{{this.sentimentsDataProcessed?.negativeMSPR}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.negativeChange}}</td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6 col-12">
+      <div class=" summary-chart">
+        <div [chart]="stock1"></div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-12">
+      <div class=" earnings-chart">
+        <div [chart]="stock2"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
@@ -32,7 +32,7 @@ import { ChartsTabComponent } from './search-home/search-results/charts-tab/char
 
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 //import { HighchartsChartModule } from 'highcharts-angular';
@@ -43,6 +43,11 @@ import more from 'highcharts/highcharts-more.src';
 import { SummaryTabComponent } from './search-home/search-results/summary-tab/summary-tab.component';
 import { InsightsTabComponent } from './search-home/search-results/insights-tab/insights-tab.component';
 import { NewsTabComponent } from './search-home/search-results/news-tab/news-tab.component';
+import { SpinnerInterceptorService } from './spinner-interceptor.service';
+import { AppSpinnerComponent } from './app-spinner/app-spinner.component';
+
+
+
 
 export function highchartsModules() {
   // apply Highcharts Modules to this array
@@ -63,6 +68,7 @@ export function highchartsModules() {
     SummaryTabComponent,
     InsightsTabComponent,
     NewsTabComponent,
+    AppSpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -83,13 +89,15 @@ export function highchartsModules() {
     MatIconButton,
     MatIcon,
     ChartModule,
-    HighchartsChartModule
+    HighchartsChartModule,
+    MatProgressSpinnerModule,
   ],
   providers: [
     provideClientHydration(),
     provideAnimationsAsync(),
     DatePipe,
-   { provide: HIGHCHARTS_MODULES, useFactory: highchartsModules }
+   {provide: HIGHCHARTS_MODULES, useFactory: highchartsModules},
+   {provide: HTTP_INTERCEPTORS, useClass:SpinnerInterceptorService, multi: true}
   ],
   bootstrap: [AppComponent]
 })

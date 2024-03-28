@@ -10,6 +10,9 @@ import { Subscription, from } from 'rxjs';
 import { EventEmitter,Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import './search-home.component.css'; 
+import { ResultSpinnerService } from '../result-spinner.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
 
@@ -17,9 +20,15 @@ import './search-home.component.css';
   selector: 'app-search-home',
   templateUrl: './search-home.component.html',
   styleUrls: ['./search-home.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  
 })
 export class SearchHomeComponent implements OnDestroy, OnInit{
+
+  //realted to spinner
+  isCompanyDataLoading: boolean = false;
+  isQuoteDataLoading: boolean = false;
+  
 
   private tickerClickedSubscription: Subscription | undefined;
 
@@ -38,17 +47,19 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
 
   currentTime: string = ''; //just to monitor if the templte is being updated every 15 seconds
   ACArray: any;
+  isACLoading: boolean = false;
 
-  //@Output() myStarFill: string = "this.searchService.isStockFavorite" ? 'yellow' : 'white';
 
   
 
   formGroup !: FormGroup; //will be initialized later
 
-  constructor(private router: Router, private route: ActivatedRoute, private service: AppServiceService, public searchService: SearchService, private fb: FormBuilder, private datePipe: DatePipe) {
+
+  constructor(private router: Router, private route: ActivatedRoute, private service: AppServiceService, public searchService: SearchService, private fb: FormBuilder, private datePipe: DatePipe, public spinnerService: ResultSpinnerService) {
     this.formGroup = this.fb.group({ // Initialize formGroup in the constructor
       'tickerValue': ['']
     });
+
   }
   
   ngOnInit(){
@@ -57,11 +68,18 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     this.searchService.pathString = this.route.snapshot.routeConfig?.path ?? '';
     console.log('current string path is', this.searchService.pathString);
 
+
     this.initForm();
 
     /*************** Related to TickerClicked Subcription *****************/
     this.tickerClickedSubscription = this.searchService.tickerClicked$.subscribe(ticker => {
+      
+    console.log('************* tickerclicked is subscribed to ************');
+    //put the ticker in your input
+    this.formGroup.get('tickerValue')?.setValue(ticker);
+    
 
+    
     this.searchService.searchedTicker = ticker;
 
     this.searchService.toggleAutoUpdate(true);
@@ -86,7 +104,7 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     this.getquoteData(ticker);
   
 
-    //resume autoupdates if we come from anothe route and results have not been cleared
+    //resume autoupdates if we come from another route and results have not been cleared
 
     this.autoUpdateInterval = setInterval(() => {
 
@@ -96,7 +114,7 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
   
     });
 
-    
+   
 
     if (this.searchService.responseData){
       this.autoUpdateInterval = setInterval(() => {
@@ -110,6 +128,7 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
 
   // mention this https://youtu.be/nWbVz1xjvOk?si=OPimmLgU-BREZVpS as a reference for autocomplete
   initForm() {
+
 
     // Fetch autocomplete data on input change
     this.formGroup.get('tickerValue')!.valueChanges.subscribe((value: string) => { //! means value changes wont be null
@@ -178,8 +197,8 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     console.log(this.searchService.pathString);
     console.log('The string path is,', this.searchService.pathString);
     if(this.searchService.pathString == "search/:ticker" && !this.resultsCleared){
-      this.getCompanyData(inputValue);
-      this.getquoteData(inputValue);
+      this.getCompanyDataForAU(inputValue);
+      this.getquoteDataForAU(inputValue);
       this.currentTime = new Date().toLocaleTimeString(); // Update current time
     }
     
@@ -188,29 +207,75 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
 
 
   getCompanyData(inputValue: string){
+    this.isCompanyDataLoading = true;
+    
     this.service.getData(inputValue).subscribe(
       response => {
-        //this.responseData = response;
         this.searchService.responseData = response;
         console.log('ResponseData property is:', this.searchService.responseData);
         this.router.navigate(['/search', inputValue]); // I only navigate to this route when I get company data
+        this.isCompanyDataLoading = false;
+
       },
       error => {
         console.log('Error is', error);
-      }
+        this.isCompanyDataLoading = false;
+        
+      },
     );
   }
 
 
  //getting stock quote data from node server
   async getquoteData(inputValue: string){
-
-    let data = await this.service.getStockQuote(inputValue);
-    console.log('quoteData',data);
-    if (data){
-      this.searchService.quoteData = data;
+    this.isQuoteDataLoading = true;
+    
+    try{
+      let data = await this.service.getStockQuote(inputValue);
+      console.log('quoteData',data);
+      if (data){
+        this.searchService.quoteData = data;
+      }
+    } catch(error){
+      console.log('Error fetching quoteData');
+    } finally {
+      this.isQuoteDataLoading = false;
+     
     }
 
+   
+
+  }
+
+  //I need to redefine the getCompanyData and getQuoteData for when we are autoupdating (hence no spinner)
+  getCompanyDataForAU(inputValue: string){
+    
+    this.service.getData(inputValue).subscribe(
+      response => { 
+        this.searchService.responseData = response;
+        console.log('ResponseData property is:', this.searchService.responseData);
+        this.router.navigate(['/search', inputValue]); // I only navigate to this route when I get company data
+        
+      },
+      error => {
+        console.log('Error is', error);   
+      },
+    );
+  }
+
+  async getquoteDataForAU(inputValue: string){
+   
+    try{
+      let data = await this.service.getStockQuote(inputValue);
+      console.log('quoteData',data);
+      if (data){
+        this.searchService.quoteData = data;
+      }
+    } catch(error){
+      console.log('Error fetching quoteData');
+    } finally {
+
+    }
   }
 
 
@@ -220,6 +285,8 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     if (this.autocompleteSubscription) {
       this.autocompleteSubscription.unsubscribe();
     }
+
+    this.isACLoading = true;
 
     this.autocompleteSubscription = this.service.getAutcoComplete(inputValue).subscribe(
       (response: any) => {
@@ -235,9 +302,14 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
           description: result.description
         }));
         console.log("ACArray:", this.ACArray);
+        
       },
       error => {
         console.log('Error is', error);
+      },
+      () => {
+        console.log('request is complete');
+        this.isACLoading = false;
       }
     );
 
@@ -246,6 +318,8 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
 
 
   clearResults(){
+
+    this.isACLoading = false; // spinner has to go when we clear data (or initiate search)
 
     console.log('results cleared');
 

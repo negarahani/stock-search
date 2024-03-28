@@ -78,6 +78,9 @@ export class ChartsTabComponent {
 
 
   this.stock = new StockChart({
+    chart:{
+      backgroundColor: '#F5F5F5'
+    },
     rangeSelector: {
       selected: 2
     },

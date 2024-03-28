@@ -4,6 +4,7 @@ import { AppServiceService } from '../app-service.service';
 import { SearchService } from '../search.service';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ResultSpinnerService } from '../result-spinner.service';
 
 
 
@@ -15,10 +16,15 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class WatchlistComponent implements OnInit {
 
+  //related to Watchlist
+  isWatchlistLoading: boolean = true;
+
+  watchlistEmptyAlert: boolean = false;
+
   private tickerClickedSubscription: Subscription | undefined;
 
   
-  constructor(private service: AppServiceService, public searchService: SearchService, private route: ActivatedRoute){}
+  constructor(private service: AppServiceService, public searchService: SearchService, private route: ActivatedRoute, public spinnerService: ResultSpinnerService){}
 
   public watchlistList: any[] = [];
 
@@ -27,16 +33,26 @@ export class WatchlistComponent implements OnInit {
     this.searchService.pathString = this.route.snapshot.routeConfig?.path ?? '';
     console.log('current string path is', this.searchService.pathString);
 
+    this.isWatchlistLoading = true;
+
     // Subscribe to getFavoriteStocks here
     this.service.getFavoriteStocks().subscribe(
       (data: any) => {
         //console.log('subscribed to getFavoriteStocks');
         this.searchService.favoriteStocks = data;
         this.watchlistList = this.searchService.favoriteStocks;
+        this.isWatchlistLoading = false;
+
+        if (this.watchlistList.length == 0) {
+          this.watchlistEmptyAlert = true;
+        } else {
+          this.watchlistEmptyAlert = false;
+        }
           
       },
       (error: any) => {
           console.error('Error fetching favorite stocks:', error);
+          this.isWatchlistLoading = false;
       }
     );
 
@@ -49,6 +65,13 @@ export class WatchlistComponent implements OnInit {
         // Update watchlistList after successful removal
         this.watchlistList = this.watchlistList.filter(item => item.tickerSymbol !== ticker);
         this.searchService.favoriteStocks = this.watchlistList; //update the favoriteStockList in the searchService
+
+        if (this.watchlistList.length == 0) {
+          this.watchlistEmptyAlert = true;
+        } else {
+          this.watchlistEmptyAlert = false;
+        }
+        
       },
       (error: any) => {
         console.error('Error removing from watchlist:', error);

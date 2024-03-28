@@ -1,21 +1,6 @@
 
 <div #results_section *ngIf="isDataAvailable() else error_section">
     <div #Top_Row>
-        <!--button style="border: none; background: none;" (click)="toggleSelect()">
-            <svg width="24" height="24" viewBox="0 0 24 24" id="star_filled" data-name="star filled" xmlns="http://www.w3.org/2000/svg">
-                <rect id="Rectangle_4" data-name="Rectangle 4" width="24" height="24" fill="none"/>
-               
-                <path id="Star" d="M10,15,4.122,18.09l1.123-6.545L.489,6.91l6.572-.955L10,0l2.939,5.955,6.572.955-4.755,4.635,1.123,6.545Z" [style.fill]="starFill" transform="translate(2 3)" stroke="#000000" stroke-miterlimit="10" stroke-width="1.5"/>
-            </svg>
-        </button-->
-
-        <!-- start of portfolio section -->
-        <!--div class="card">
-            <div class="card-body">
-                <div style="display: inline-block; margin: 10px;"><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="buyStock()">Buy</a></div>
-                <div style="display: inline-block" *ngIf="isInPortfolio"><a class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="sellStock()" >Sell</a></div>
-            </div>
-        </div-->
 
         <!-- Buy Modal -->
         <div #buyModal class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" [formGroup]="buyForm">
@@ -76,14 +61,43 @@
         </div>
         
         <!-- end of portfolio section -->
-       
+        <!-- Watchlist Alerts -->
+        <div class="box" *ngIf="addedWatchlistAlert">
+            <div class="container col-lg-10 alert alert-success alert-dismissible fade show" role="alert" style="text-align: center;">
+                {{this.searchService.responseData.ticker}} Added to Watchlist.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
 
-        <div class="container col-lg-6">
+        <div class="box" *ngIf="removedWatchlistAlert">
+            <div class="container col-lg-10 alert alert-danger alert-dismissible fade show" role="alert" style="text-align: center;">
+                {{this.searchService.responseData.ticker}} removed from Watchlist.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <!-- Portfolio Alerts -->
+        <div class="box" *ngIf="stockBoughtAlert">
+            <div class="container col-lg-10 alert alert-success alert-dismissible fade show" role="alert" style="text-align: center;">
+                {{this.searchService.responseData.ticker}} bought successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <div class="box" *ngIf="stockSoldAlert">
+            <div class="container col-lg-10 alert alert-danger alert-dismissible fade show" role="alert" style="text-align: center;">
+                {{this.searchService.responseData.ticker}} sold successfully.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+
+
+        <div class="container col-lg-8">
             <div class="row" >
               <div class="col bg-light" >
                  <div class="d-flex justify-content-center">
                     <p style="margin: 0;">{{searchService.responseData.ticker}}</p>
-                    <button style="border: none; background: none;" (click)="toggleSelect()">
+                    <button style="border: none; background: none;" (click)="toggleSelect();">
                         <svg width="20" height="20" viewBox="0 0 24 24" id="star_filled" data-name="star filled" xmlns="http://www.w3.org/2000/svg">
                             <rect id="Rectangle_4" data-name="Rectangle 4" width="24" height="24" fill="none"/>
                             <!--on the next line we have [style.fill]="starFill"-->
@@ -119,19 +133,41 @@
         <div class="container text-danger d-flex justify-content-center" *ngIf="!isMarketOpen(searchService.quoteData?.t)">Market Closed on {{ formatTime(searchService.quoteData?.t) }}</div>
     </div>
     
-    <div class="container col-lg-8">
+    <!-- <div class="container col-lg-8">
         <mat-tab-group #bottom_row>
             <mat-tab label="Summary"> <app-summary-tab></app-summary-tab> </mat-tab>
             <mat-tab label="Top News"><app-news-tab></app-news-tab> </mat-tab>
             <mat-tab label="Charts"> <app-charts-tab></app-charts-tab> </mat-tab>
             <mat-tab label="Insights"><app-insights-tab></app-insights-tab></mat-tab>
         </mat-tab-group>
-    </div>
+    </div> -->
    
+    
+
+
+      <nav class="container col-lg-10">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-summary-tab" data-bs-toggle="tab" data-bs-target="#nav-summary" type="button" role="tab" aria-controls="nav-summary" aria-selected="true">Summary</button>
+          <button class="nav-link" id="nav-news-tab" data-bs-toggle="tab" data-bs-target="#nav-news" type="button" role="tab" aria-controls="nav-news" aria-selected="false">Top News</button>
+          <button class="nav-link" id="nav-charts-tab" data-bs-toggle="tab" data-bs-target="#nav-charts" type="button" role="tab" aria-controls="nav-charts" aria-selected="false">Charts</button>
+          <button class="nav-link" id="nav-insights-tab" data-bs-toggle="tab" data-bs-target="#nav-insights" type="button" role="tab" aria-controls="nav-insights" aria-selected="false">Insights</button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-summary" role="tabpanel" aria-labelledby="nav-summary-tab"><app-summary-tab></app-summary-tab></div>
+        <div class="tab-pane fade" id="nav-news" role="tabpanel" aria-labelledby="nav-news-tab"><app-news-tab></app-news-tab></div>
+        <div class="tab-pane fade" id="nav-charts" role="tabpanel" aria-labelledby="nav-charts-tab"><app-charts-tab></app-charts-tab></div>
+        <div class="tab-pane fade" id="nav-insights" role="tabpanel" aria-labelledby="nav-insights-tab"><app-insights-tab></app-insights-tab></div>
+      </div>
 
 </div>
 
 <ng-template #error_section>
-    <div >No data found. Please enter a valid Ticker</div>
+    <div class="box">
+        <div class="alert alert-danger container col-lg-10" role="alert" style="text-align: center; margin-top: 50px;">
+       
+            No data found. Please enter a valid Ticker.
+        </div>
+    </div>
 </ng-template>
 

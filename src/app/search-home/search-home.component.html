@@ -5,12 +5,22 @@
 </div>
 
 <form #formRef="ngForm" class="form-inline container" (ngSubmit)="searchTicker(searchInput.value)" #form="ngForm" [formGroup]="formGroup" style="display:flex; justify-content: center; margin-top: 20px;">
-    <mat-form-field style="width: 300px;" class="search-bar" appearance="outline">
+    <mat-form-field style="width: 400px; border-radius: 40px;" class="search-bar" appearance="outline">
         <div style="display: flex;align-items: center; height: 20px;" class="search-bar-container" >
             <input #searchInput class="form-control" placeholder="Enter Stock Ticker Symbol" 
             matInput [matAutocomplete]="auto" formControlName = "tickerValue" value="selectedTicker" style="background-color: white;" >
             <mat-autocomplete #auto="matAutocomplete">
-                <mat-option *ngFor="let item of ACArray" [value]="item.symbol" (click)="selectOption(item.symbol)"> {{item.symbol}} | {{item.description}} </mat-option>
+
+                <!-- autocomplete spinner -->
+                <mat-option class="loading" *ngIf="isACLoading">
+                    <mat-spinner diameter="25"></mat-spinner>
+                </mat-option>
+
+                <!-- autocomplete options -->
+                <ng-container *ngIf="!isACLoading">
+                    <mat-option *ngFor="let item of ACArray" [value]="item.symbol" (click)="selectOption(item.symbol)"> {{item.symbol}} | {{item.description}} </mat-option>
+                </ng-container>
+
             </mat-autocomplete>
             <button mat-icon-button type="submit" style="size: 20px;"> 
                 <mat-icon style="color: #302cac">search</mat-icon>
@@ -24,10 +34,18 @@
 </form>
 
 
-<!--app-search-results #search_results *ngIf="responseData && !resultsCleared"  [myresponseData]="responseData" [myQuoteData]="quoteData"></app-search-results-->
-<!--on the next line[starFill]="myStarFill"-->
-<app-search-results #search_results *ngIf="searchService.responseData && !this.resultsCleared">
-</app-search-results>
-<!--p>Last updated: {{ currentTime }}</p-->
+
+<div *ngIf="isCompanyDataLoading || isQuoteDataLoading">
+  <div class="d-flex justify-content-center">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+</div>
+
+<div *ngIf="!isCompanyDataLoading && !isQuoteDataLoading">
+    <app-search-results #search_results *ngIf="searchService.responseData && !this.resultsCleared"></app-search-results>
+</div>
+
+
+
 
 

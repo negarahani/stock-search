@@ -1,35 +1,69 @@
-<p>portfolio works!</p>
+
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-<h1> My Portfolio </h1>
-<p>Money in Wallet: {{ '$' }}{{this.searchService.cashBalance }}</p>
-<div class="card" *ngFor="let item of this.completeArray">
-    <div class="card-header">
-      {{item.ticker  }}     {{item.company_name}}
-    </div>
-    <div class="card-body">
-      
-      <div class="second_column">
-        <p class="card-text">quantity: {{item.quantity}}</p>
-        <p class="card-text">Avg.Cost/ Share: {{item.average_cost_share}}</p>
-        <p class="card-text">Total Cost: {{item.total_cost}}</p>
-      </div>
-      
+<!-- Portfolio Alerts -->
 
-      <div [ngStyle]="{'color': (item.change > 0) ? '#008000' : (item.change < 0) ? '#FF0000' : '#000000'}">
-        <p class="card-text">Change: {{item.change}}</p>
-        <p class="card-text">Current Price: {{item.current_price}}</p>
-        <p class="card-text">Market Value: {{item.market_value}}</p>
-      </div>
-      
-    </div>
-    <div class="card-footer text-muted">
-        <div style="display: inline-block; margin-right: 10px;"><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="this.selectedItem = item ;this.buyStock(this.selectedItem)">Buy</a></div>
-        <div style="display: inline-block"><a class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="this.selectedItem = item; this.sellStock(this.selectedItem)">Sell</a></div>
-    </div>
+<div class="box" *ngIf="stockBoughtAlert">
+  <div class="container col-lg-10 alert alert-success alert-dismissible fade show" role="alert" style="text-align: center;">
+    {{this.selectedTicker}} bought successfully.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 </div>
 
+<div class="box" *ngIf="stockSoldAlert">
+  <div class="container col-lg-10 alert alert-danger alert-dismissible fade show" role="alert" style="text-align: center;">
+    {{this.selectedTicker}} sold successfully.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+</div>
 
+<h1> My Portfolio </h1>
+
+<!-- spinner -->
+<div *ngIf="isBalanceLoading || isPortfolioLoading">
+  <div class="d-flex justify-content-center">
+    <mat-spinner diameter="50"></mat-spinner>
+  </div>
+</div>
+
+<div *ngIf="!isBalanceLoading && !isPortfolioLoading">
+
+  <p>Money in Wallet: {{ '$' }}{{this.searchService.cashBalance }}</p>
+
+  <!-- Empty Alert -->
+  <div class="box" *ngIf="this.portfolioEmptyAlert">
+    <div class="alert alert-warning container col-lg-10" role="alert" style="text-align: center; margin-top: 50px;">
+        Currently you don't have any stock.
+    </div>
+  </div>
+
+  <div class="card" *ngFor="let item of this.completeArray">
+      <div class="card-header">
+        {{item.ticker  }}  ,   {{item.company_name}}
+      </div>
+      <div class="card-body">
+        
+        <div class="second_column">
+          <p class="card-text">quantity: {{item.quantity}}</p>
+          <p class="card-text">Avg.Cost/ Share: {{item.average_cost_share}}</p>
+          <p class="card-text">Total Cost: {{item.total_cost}}</p>
+        </div>
+        
+
+        <div [ngStyle]="{'color': (item.change > 0) ? '#008000' : (item.change < 0) ? '#FF0000' : '#000000'}">
+          <p class="card-text">Change: {{item.change}}</p>
+          <p class="card-text">Current Price: {{item.current_price}}</p>
+          <p class="card-text">Market Value: {{item.market_value}}</p>
+        </div>
+        
+      </div>
+      <div class="card-footer text-muted">
+          <div style="display: inline-block; margin-right: 10px;"><a class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="this.selectedItem = item ;this.buyStock(this.selectedItem)">Buy</a></div>
+          <div style="display: inline-block"><a class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="this.selectedItem = item; this.sellStock(this.selectedItem)">Sell</a></div>
+      </div>
+  </div>
+
+</div>
 
   <!-- Buy Modal -->
   <div #buyModal class="modal fade" id="buyModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" [formGroup]="buyForm">
