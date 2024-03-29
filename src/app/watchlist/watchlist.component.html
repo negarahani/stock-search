@@ -10,7 +10,7 @@
 </div>
 
 <!-- spinner -->
-<div *ngIf="isWatchlistLoading">
+<div *ngIf="isWatchlistLoading" style="margin-top: 100px;">
     <div class="d-flex justify-content-center">
       <mat-spinner diameter="50"></mat-spinner>
     </div>
@@ -28,7 +28,7 @@
         </div>
         <div class="col">
           <div style="font-size: large; " [ngStyle]="{'color': (item.change > 0) ? '#198754' : (item.change < 0) ? '#dc3545' : '#000000'}">
-            {{item.current_price}} 
+            {{item.current_price | number:'1.2-2'}} 
           </div>
 
           <div style="font-size: small; margin-top: 5px;" [ngStyle]="{'color': (item.change > 0) ? '#198754' : (item.change < 0) ? '#dc3545' : '#000000'}">
@@ -36,7 +36,7 @@
             <i *ngIf="item.change > 0" class="bi bi-caret-up-fill" style="color: #198754;"></i>
             <i *ngIf="item.change < 0" class="bi bi-caret-down-fill" style="color: #dc3545;"></i>
 
-            {{item.change}} ({{item.change_percent}}%)
+            {{item.change | number:'1.2-2'}} ({{item.change_percent | number:'1.2-2'}}%)
           </div>
         </div>
       </div>

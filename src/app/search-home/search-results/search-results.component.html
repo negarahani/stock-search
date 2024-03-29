@@ -92,11 +92,11 @@
         </div>
 
 
-        <div class="container col-lg-8">
+        <div class="container col-lg-8" style="margin-top: 10px;">
             <div class="row" >
-              <div class="col bg-light" >
+              <div class="col" >
                  <div class="d-flex justify-content-center">
-                    <p style="margin: 0;">{{searchService.responseData.ticker}}</p>
+                    <p style="margin: 0; font-size: 30px;">{{searchService.responseData.ticker}}</p>
                     <button style="border: none; background: none;" (click)="toggleSelect();">
                         <svg width="20" height="20" viewBox="0 0 24 24" id="star_filled" data-name="star filled" xmlns="http://www.w3.org/2000/svg">
                             <rect id="Rectangle_4" data-name="Rectangle 4" width="24" height="24" fill="none"/>
@@ -105,34 +105,39 @@
                         </svg>
                     </button>
                 </div>
-                 <div class="d-flex justify-content-center" style="text-align: center;">{{searchService.responseData.name}}</div>
-                 <div class="d-flex justify-content-center" style="text-align: center;">{{searchService.responseData.exchange}}</div>
+                 <div class="d-flex justify-content-center" style="text-align: center; font-size: 23px; margin-top: 7px; color: #696969;">{{searchService.responseData.name}}</div>
+                 <div class="d-flex justify-content-center" style="text-align: center; margin-top: 7px;color: #696969; font-size: small;">{{searchService.responseData.exchange}}</div>
                  <div class="d-flex justify-content-center">
-                    <div style="display: inline-block;" class="mx-2"><a class="btn btn-sm btn-success" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="buyStock()">Buy</a></div>
-                    <div style="display: inline-block" class="mx-2" *ngIf="isInPortfolio"><a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="sellStock()" >Sell</a></div>
+                    <div style="display: inline-block; margin-top: 7px;" class="mx-2"><a class="btn btn-sm btn-success" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="buyStock()">Buy</a></div>
+                    <div style="display: inline-block; margin-top: 7px;" class="mx-2" *ngIf="isInPortfolio"><a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="sellStock()" >Sell</a></div>
                 </div>
               </div>
-              <div class="col-3 bg-primary" >
+              <div class="col-3" >
                 <div class="d-flex justify-content-center" >
                     <img src={{searchService.responseData.logo}} alt="Company Logo" class="img-fluid" style="max-width: 50%; height: auto;">
                 </div>
               </div>
-              <div class="col bg-light ">
-                <div class="d-flex justify-content-center" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">{{searchService.quoteData?.c}}</div>
-                <div class="d-flex justify-content-center">
+              <div class="col">
+                <div class="d-flex justify-content-center" style="font-size: 30px;" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">
+                    {{searchService.quoteData?.c | number:'1.2-2'}}
+                </div>
+
+                <div class="d-flex justify-content-center" style="font-size: 23px; margin-top: 7px;">
                     
                     <i *ngIf="searchService.quoteData?.d > 0" class="bi bi-caret-up-fill" style="color: #198754;"></i>
                     <i *ngIf="searchService.quoteData?.d < 0" class="bi bi-caret-down-fill" style="color: #dc3545;"></i>
 
-                    <p style="margin: 0;" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">{{searchService.quoteData?.d}} ({{searchService.quoteData?.dp}}%)</p>
+                    <p style="margin: 0;" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">
+                        {{searchService.quoteData?.d | number:'1.2-2'}} ({{searchService.quoteData?.dp | number:'1.2-2'}}%)
+                    </p>
                 </div>
-                <div class="d-flex justify-content-center" style="text-align: center;">{{ searchService.currentTime }}</div>
+                <div class="d-flex justify-content-center" style="text-align: center; color: #696969; font-size: small; margin-top:7px;">{{ searchService.currentTime }}</div>
               </div>
             </div>
         </div>
 
-        <div class="container text-success d-flex justify-content-center" *ngIf="isMarketOpen(searchService.quoteData?.t)">Market is Open</div>
-        <div class="container text-danger d-flex justify-content-center" *ngIf="!isMarketOpen(searchService.quoteData?.t)">Market Closed on {{ formatTime(searchService.quoteData?.t) }}</div>
+        <div class="container text-success d-flex justify-content-center" style="margin-top: 30px; font-weight: bold;"  *ngIf="isMarketOpen(searchService.quoteData?.t)">Market is Open</div>
+        <div class="container text-danger d-flex justify-content-center" style="margin-top: 30px; font-weight: bold;" *ngIf="!isMarketOpen(searchService.quoteData?.t)">Market Closed on {{ formatTime(searchService.quoteData?.t) }}</div>
     </div>
     
     <!-- <div class="container col-lg-8">
@@ -147,7 +152,7 @@
     
 
 
-      <nav class="container col-lg-10">
+      <nav class="container col-lg-10" style="margin-top: 40px;">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="nav-summary-tab" data-bs-toggle="tab" data-bs-target="#nav-summary" type="button" role="tab" aria-controls="nav-summary" aria-selected="true">Summary</button>
           <button class="nav-link" id="nav-news-tab" data-bs-toggle="tab" data-bs-target="#nav-news" type="button" role="tab" aria-controls="nav-news" aria-selected="false">Top News</button>

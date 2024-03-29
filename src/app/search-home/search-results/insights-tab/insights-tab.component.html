@@ -12,18 +12,18 @@
     <tbody>
       <tr>
         <th scope="row" class="text-center">Total</th>
-        <td class="text-center">{{this.sentimentsDataProcessed?.totalMSPR}}</td>
-        <td class="text-center">{{this.sentimentsDataProcessed?.totalChange}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.totalMSPR | number:'1.2-2'}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.totalChange | number:'1.2-2'}}</td>
       </tr>
       <tr>
         <th scope="row" class="text-center">Positive</th>
-        <td class="text-center">{{this.sentimentsDataProcessed?.positiveMSPR}}</td>
-        <td class="text-center">{{this.sentimentsDataProcessed?.positiveChange}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.positiveMSPR | number:'1.2-2'}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.positiveChange | number:'1.2-2'}}</td>
       </tr>
       <tr>
         <th scope="row" class="text-center">Negative</th>
-        <td class="text-center">{{this.sentimentsDataProcessed?.negativeMSPR}}</td>
-        <td class="text-center">{{this.sentimentsDataProcessed?.negativeChange}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.negativeMSPR | number:'1.2-2'}}</td>
+        <td class="text-center">{{this.sentimentsDataProcessed?.negativeChange | number:'1.2-2'}}</td>
       </tr>
     </tbody>
   </table>
