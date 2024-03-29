@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable,Subject } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SearchService {
 
+  constructor(private datePipe: DatePipe) {}
+
   //data related to home 
   searchedTicker: string = '';
   responseData: any;
   quoteData: any;
  
+  currentTimestmp: number = Date.now();
+  currentTime: string = this.datePipe.transform(this.currentTimestmp, 'yyyy-MM-dd HH:mm:ss')?? '';//just to monitor if the templte is being updated every 15 seconds
 
   autoCompleteData: any;
   isMarketOpen: boolean = true;
@@ -33,7 +38,7 @@ export class SearchService {
 
 
 
-  constructor() {}
+ 
 
   //method to allow communication between watchlist and search-home component
   sendTickerClicked(ticker: string) {

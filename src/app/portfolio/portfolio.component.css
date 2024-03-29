@@ -3,3 +3,9 @@
     min-height: 50px;
     padding: 10px 15px;
 }
+
+.table.no-border tr,
+  .table.no-border td,
+  .table.no-border th {
+    border: none;
+  }

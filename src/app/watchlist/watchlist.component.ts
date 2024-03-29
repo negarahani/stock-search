@@ -27,36 +27,71 @@ export class WatchlistComponent implements OnInit {
   constructor(private service: AppServiceService, public searchService: SearchService, private route: ActivatedRoute, public spinnerService: ResultSpinnerService){}
 
   public watchlistList: any[] = [];
+  completeArray: any[] = []; //array to keep watchlist items along with thier quote data
 
   ngOnInit(){
     console.log('Watchlist Iniitalised');
     this.searchService.pathString = this.route.snapshot.routeConfig?.path ?? '';
     console.log('current string path is', this.searchService.pathString);
 
-    this.isWatchlistLoading = true;
+    this.populateWatchlist();
 
-    // Subscribe to getFavoriteStocks here
-    this.service.getFavoriteStocks().subscribe(
-      (data: any) => {
-        //console.log('subscribed to getFavoriteStocks');
-        this.searchService.favoriteStocks = data;
-        this.watchlistList = this.searchService.favoriteStocks;
-        this.isWatchlistLoading = false;
-
-        if (this.watchlistList.length == 0) {
-          this.watchlistEmptyAlert = true;
-        } else {
-          this.watchlistEmptyAlert = false;
-        }
-          
-      },
-      (error: any) => {
-          console.error('Error fetching favorite stocks:', error);
-          this.isWatchlistLoading = false;
-      }
-    );
 
   }
+
+  async fetchWatchlist(){
+    let data = await this.service.getFavoriteStocks2();
+    console.log('favorite stocks data is:', data);
+    if (data){
+      this.searchService.favoriteStocks = data;
+      this.watchlistList = this.searchService.favoriteStocks;
+    }
+
+    if (this.watchlistList.length == 0) {
+      this.watchlistEmptyAlert = true;
+    } else {
+      this.watchlistEmptyAlert = false;
+    }
+    
+  }
+
+  async populateWatchlist(){
+
+    this.isWatchlistLoading = true;
+
+    try{
+      this.completeArray = [];
+      await this.fetchWatchlist();
+      console.log('favorite stock list is:', this.searchService.favoriteStocks);
+      if (this.searchService.favoriteStocks && Object.keys(this.searchService.favoriteStocks).length > 0){
+        for (const item of this.searchService.favoriteStocks){
+          let quoteData: any = await this.service.getStockQuote2(item.tickerSymbol);
+          console.log('quote data is:', quoteData);
+          //caclulating the values dynamically
+          let curPrice = quoteData.c;
+          let change = quoteData.d;
+          let changePercent = quoteData.dp;
+
+          const curItem = {"ticker":item.tickerSymbol, "company_name": item.companyName, "current_price": curPrice, 
+          "change": change, "change_percent":changePercent};
+
+          this.completeArray.push(curItem);
+        }
+        console.log('updated completearray is: ', this.completeArray);
+      } else{
+        console.log('no item found in watchlist');
+      }
+    } catch(error){
+      console.log('Error fetching watchlist data', error);
+    } finally {
+      this.isWatchlistLoading = false;
+    }
+    
+    
+  }
+
+  
+
 
   removeFromWatchlist(ticker: string){
     this.service.deleteFavoriteStock(ticker).subscribe(
@@ -80,8 +115,7 @@ export class WatchlistComponent implements OnInit {
   }
 
   searchClickedTicker(ticker: string){
-    //console.log("div clicked", ticker);
-    //console.log('start of the problem!');
+    console.log("div clicked", ticker);
     this.searchService.sendTickerClicked(ticker);
   }
 }

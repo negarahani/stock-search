@@ -23,10 +23,10 @@
     padding: 0 8px !important;
 }
 
-html {
+/* instead of html {} */
+.custom-search-bar {
     --mdc-outlined-text-field-container-shape: 40px;
     --mdc-outlined-text-field-outline-width: 5px;
     --mdc-outlined-text-field-outline-color: #302cac;
 }
 
-/* #302cac  */

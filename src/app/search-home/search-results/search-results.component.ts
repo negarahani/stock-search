@@ -4,7 +4,7 @@ import { AppServiceService } from '../../app-service.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DatePipe } from '@angular/common'; 
-import * as moment from 'moment';
+
 
 
 
@@ -73,25 +73,21 @@ export class SearchResultsComponent implements OnChanges, OnInit{
     this.fetchPortfolioList();
     
   }
-  //formatting the unix timestamp given in quoteData
-  formatTime(timestamp: number): string {
-    return this.datePipe.transform(timestamp * 1000, 'yyyy-MM-dd HH:mm:ss') ?? ''; //first we need to convert to miliseconds (*1000)
-    //the above gives time in my local time zone(PST)
-  }
+  
 
-  // Function to convert local date to UTC
-  convertLocalToUTC(date: Date): Date {
-    return moment.utc(date).toDate();
-  }
+  
 
   // Function to determine if market is open
 isMarketOpen(timestamp: number): boolean {
-  const lastOpenTimeUTC = new Date(timestamp * 1000); // timestamp from API is already in UTC
-  const currentTimeUTC = this.convertLocalToUTC(new Date()); // Convert current local time to UTC
+
+  let lastOpenTimestamp = timestamp * 1000; //conver it to milliseconds
+  let currentTimestamp =  Date.now();
+
+
   const fiveMinutesInMilliseconds = 5 * 60 * 1000;
 
   // Calculate the time difference in milliseconds
-  const timeDifference = currentTimeUTC.getTime() - lastOpenTimeUTC.getTime();
+  const timeDifference = currentTimestamp - lastOpenTimestamp;
 
   // Check if the time difference is greater than 5 minutes (300,000 milliseconds)
   if (timeDifference > fiveMinutesInMilliseconds) {
@@ -101,6 +97,11 @@ isMarketOpen(timestamp: number): boolean {
     // Market is open
     return true;
   }
+}
+
+//take the timestamp from api and convert to desired format
+formatTime(timestamp: number){
+  return this.datePipe.transform(timestamp * 1000 , 'yyyy-MM-dd HH:mm:ss') ?? '';
 }
 
   /****************  Related to Watchlist   *******************/

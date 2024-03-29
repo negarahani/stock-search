@@ -4,7 +4,7 @@
     <h3 style="font-size: 30px; font-weight: lighter; margin-top: 50px;">STOCK SEARCH</h3>
 </div>
 
-<form #formRef="ngForm" class="form-inline container" (ngSubmit)="searchTicker(searchInput.value)" #form="ngForm" [formGroup]="formGroup" style="display:flex; justify-content: center; margin-top: 20px;">
+<form #formRef="ngForm" class="form-inline container custom-search-bar" (ngSubmit)="searchTicker(searchInput.value)" #form="ngForm" [formGroup]="formGroup" style="display:flex; justify-content: center; margin-top: 20px;">
     <mat-form-field style="width: 400px; border-radius: 40px;" class="search-bar" appearance="outline">
         <div style="display: flex;align-items: center; height: 20px;" class="search-bar-container" >
             <input #searchInput class="form-control" placeholder="Enter Stock Ticker Symbol" 
@@ -40,6 +40,12 @@
     <mat-spinner diameter="50"></mat-spinner>
   </div>
 </div>
+
+
+
+<!-- <app-app-spinner></app-app-spinner>
+
+<div *ngIf="!!spinnerService.spinnerCounter$"> -->
 
 <div *ngIf="!isCompanyDataLoading && !isQuoteDataLoading">
     <app-search-results #search_results *ngIf="searchService.responseData && !this.resultsCleared"></app-search-results>

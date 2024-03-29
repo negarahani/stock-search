@@ -133,7 +133,15 @@ export class AppServiceService {
     return await lastValueFrom(this.http.get(`${this.baseUrl}search-quote/${tickerSymbol}`));
   }
   
-  
+  async getFavoriteStocks2() {
+    try{
+      return await lastValueFrom(this.http.get<any[]>(`${this.baseUrl}api/favorites/getFavorites`));
+    } catch(error){
+      console.log('an error occured while fetching favorite stocks');
+      return null;
+    }
+    } 
+    
   
   
   // Method to add a portfolio item

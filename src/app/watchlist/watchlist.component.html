@@ -1,4 +1,7 @@
-<h1> My Watchlist </h1>
+
+<div class="container col-lg-10" style="font-size: 30px; margin-top: 40px; margin-bottom: 30px;">
+  My Watchlist 
+</div>
 
 <div class="box" *ngIf="this.watchlistEmptyAlert">
   <div class="alert alert-warning container col-lg-10" role="alert" style="text-align: center; margin-top: 50px;">
@@ -13,12 +16,32 @@
     </div>
   </div>
 
-<div *ngIf="!isWatchlistLoading">
-    <div class="alert alert-light alert-dismissible" *ngFor="let item of watchlistList" (click)="searchClickedTicker(item.tickerSymbol)" style="cursor: pointer;">
-        <button class="btn-close" type="button" data-bs-dismiss="alert" (click)="removeFromWatchlist(item.tickerSymbol); $event.stopPropagation();"></button>
-        <p>watchlist item 1: {{item.tickerSymbol}} and {{item.companyName}}</p>
-    </div>
 
+<div *ngIf="!isWatchlistLoading" class="box">
+  <div class="container col-lg-10 alert alert-light alert-dismissible" *ngFor="let item of completeArray" (click)="searchClickedTicker(item.ticker)" style="cursor: pointer;">
+      
+      <button class="btn-close custom-close-btn position-absolute top-0 start-0" type="button" data-bs-dismiss="alert" (click)="removeFromWatchlist(item.ticker); $event.stopPropagation();"></button>
+      <div class="row" style="margin-top: 20px;">
+        <div class="col">
+          <div style="font-size: large;">{{item.ticker}}</div>
+          <div style="font-size: small; margin-top: 5px;" >{{item.company_name}}</div>
+        </div>
+        <div class="col">
+          <div style="font-size: large; " [ngStyle]="{'color': (item.change > 0) ? '#198754' : (item.change < 0) ? '#dc3545' : '#000000'}">
+            {{item.current_price}} 
+          </div>
+
+          <div style="font-size: small; margin-top: 5px;" [ngStyle]="{'color': (item.change > 0) ? '#198754' : (item.change < 0) ? '#dc3545' : '#000000'}">
+
+            <i *ngIf="item.change > 0" class="bi bi-caret-up-fill" style="color: #198754;"></i>
+            <i *ngIf="item.change < 0" class="bi bi-caret-down-fill" style="color: #dc3545;"></i>
+
+            {{item.change}} ({{item.change_percent}}%)
+          </div>
+        </div>
+      </div>
+  </div>
 </div>
+
 
 

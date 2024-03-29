@@ -89,11 +89,14 @@ export class SummaryTabComponent {
       this.searchService.quoteData = data;
     }
 
-    //calculate if market is open or closed
+    
     //calculate if the market is open or closed
-    const lastOpenTime = this.searchService.quoteData.t; //this is based on utc, should convert to pst?
-    //console.log('lastopentime is',lastOpenTime);
+    const lastOpenTime = this.searchService.quoteData.t * 1000; //convert it to miliseconds
+    
     const currentTime = Date.now();
+
+    //console.log('******************lastopentime is**********************',lastOpenTime);
+    //console.log('*****************current time is***********************',currentTime);
 
     if ((currentTime - lastOpenTime) > 5 * 60 * 1000) { //in this case market is closed
       const unixTimestamp = this.searchService.quoteData.t;

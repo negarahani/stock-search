@@ -3,3 +3,8 @@
     min-height: 50px;
     padding: 10px 15px;
 }
+
+.custom-close-btn {
+    font-size: 0.35rem; 
+    
+  }

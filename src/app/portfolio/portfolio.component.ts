@@ -68,7 +68,7 @@ export class PortfolioComponent implements OnInit {
     this.searchService.portfolioList = [];
     
 
-    console.log('ngonInit');
+    //console.log('ngonInit');
     this.fetchBalanceData();
     this.populateData();
     
@@ -121,7 +121,7 @@ export class PortfolioComponent implements OnInit {
       if (this.searchService.portfolioList && Object.keys(this.searchService.portfolioList).length > 0){
         for (const item of this.searchService.portfolioList){
           let quoteData: any = await this.service.getStockQuote2(item.ticker);
-          console.log('quote data it:', quoteData);
+          //console.log('quote data it:', quoteData);
           //values are calculated dynamically
           let curPrice = quoteData.c;
           let avgCostShare = item.total_cost / item.quantity;
@@ -135,9 +135,9 @@ export class PortfolioComponent implements OnInit {
           
 
         }
-        console.log('updated completearray is: ', this.completeArray);
+        //console.log('updated completearray is: ', this.completeArray);
       } else {
-        console.log('no item found in portfolio');
+        //console.log('no item found in portfolio');
       }
     } catch (error){
       console.error('Error fetching portfolio data:', error);

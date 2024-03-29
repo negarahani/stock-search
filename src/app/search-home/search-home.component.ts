@@ -38,14 +38,12 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
   } 
 
   resultsCleared: boolean = false;
-  isMarketOpen : boolean = true;
   fromDateFormatted: any;
   toDateFormatted: any;
   
   autoUpdateInterval: any; //we need this to store the interval ID returned by timeInterval
   autocompleteSubscription: Subscription | undefined;
 
-  currentTime: string = ''; //just to monitor if the templte is being updated every 15 seconds
   ACArray: any;
   isACLoading: boolean = false;
 
@@ -199,7 +197,10 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     if(this.searchService.pathString == "search/:ticker" && !this.resultsCleared){
       this.getCompanyDataForAU(inputValue);
       this.getquoteDataForAU(inputValue);
-      this.currentTime = new Date().toLocaleTimeString(); // Update current time
+
+      //update the current timestamp
+      let currentTimestmp: number = Date.now();
+      this.searchService.currentTime = this.datePipe.transform(currentTimestmp, 'yyyy-MM-dd HH:mm:ss')?? '';
     }
     
   }
@@ -273,8 +274,6 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
       }
     } catch(error){
       console.log('Error fetching quoteData');
-    } finally {
-
     }
   }
 

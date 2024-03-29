@@ -7,12 +7,12 @@
             <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">  {{this.searchService.searchedTicker}}</h5>
+                <h3 class="modal-title" id="exampleModalLabel">  {{this.searchService.searchedTicker}}</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                <p>Current Price: {{this.portfolioCurPrice}}</p> 
-                <p>Money in Wallet: {{ this.searchService.cashBalance }} </p>
+                <p>Current Price: {{this.portfolioCurPrice  | number:'1.2-2'}}</p> 
+                <p>Money in Wallet: ${{ this.searchService.cashBalance  | number:'1.2-2'}} </p>
                 <mat-form-field appearance="outline">
                     <input
                     type="number"
@@ -22,9 +22,9 @@
                     formControlName="value">
                 </mat-form-field>
                 </div>
-                <div style="color:red" *ngIf="showBuyError">Not enough money in wallet!</div>
-                <div class="modal-footer">
-                <div>total: {{this.totalCostToBuy}}</div>
+                <div style="color:red; margin-left: 20px;" *ngIf="showBuyError">Not enough money in wallet!</div>
+                <div class="modal-footer" style="display: flex; justify-content: space-between;">
+                <div>total: {{this.totalCostToBuy  | number:'1.2-2'}}</div>
                 <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalBuy()" [disabled]="this.hideBuyButton">Buy</button></div>
                 </div>
             </div>
@@ -36,12 +36,12 @@
             <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">  {{this.searchService.searchedTicker}}</h5>
+                <h3 class="modal-title" id="exampleModalLabel">  {{this.searchService.searchedTicker}}</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                <p>Current Price: {{this.portfolioCurPrice}}</p> 
-                <p>Money in Wallet: {{ this.searchService.cashBalance }} </p>
+                <p>Current Price: {{this.portfolioCurPrice  | number:'1.2-2'}}</p> 
+                <p>Money in Wallet: ${{ this.searchService.cashBalance | number:'1.2-2' }} </p>
                 <mat-form-field appearance="outline">
                     <input
                     type="number"
@@ -51,9 +51,9 @@
                     formControlName="value">
                 </mat-form-field>
                 </div>
-                <div style="color:red" *ngIf="showSellError">You cannot sell the stocks that you don't have!</div>
-                <div class="modal-footer">
-                <div>total: {{this.totalCostToSell}}</div>
+                <div style="color:red; margin-left: 20px;" *ngIf="showSellError">You cannot sell the stocks that you don't have!</div>
+                <div class="modal-footer" style="display: flex; justify-content: space-between;">
+                <div>total: {{this.totalCostToSell  | number:'1.2-2'}}</div>
                 <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalSell()" [disabled]="this.hideSellButton">Sell</button></div>
                 </div>
             </div>
@@ -108,23 +108,25 @@
                  <div class="d-flex justify-content-center" style="text-align: center;">{{searchService.responseData.name}}</div>
                  <div class="d-flex justify-content-center" style="text-align: center;">{{searchService.responseData.exchange}}</div>
                  <div class="d-flex justify-content-center">
-                    <div style="display: inline-block;" class="mx-2"><a class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="buyStock()">Buy</a></div>
-                    <div style="display: inline-block" class="mx-2" *ngIf="isInPortfolio"><a class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="sellStock()" >Sell</a></div>
+                    <div style="display: inline-block;" class="mx-2"><a class="btn btn-sm btn-success" type="button" data-bs-toggle="modal" data-bs-target="#buyModal" (click)="buyStock()">Buy</a></div>
+                    <div style="display: inline-block" class="mx-2" *ngIf="isInPortfolio"><a class="btn btn-sm btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#sellModal" (click)="sellStock()" >Sell</a></div>
                 </div>
               </div>
-              <div class="col bg-primary" >
+              <div class="col-3 bg-primary" >
                 <div class="d-flex justify-content-center" >
-                    <img src={{searchService.responseData.logo}} alt="Company Logo" class="img-fluid" style="max-width: 30%; height: auto;">
+                    <img src={{searchService.responseData.logo}} alt="Company Logo" class="img-fluid" style="max-width: 50%; height: auto;">
                 </div>
               </div>
               <div class="col bg-light ">
                 <div class="d-flex justify-content-center" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">{{searchService.quoteData?.c}}</div>
                 <div class="d-flex justify-content-center">
-                    <img *ngIf="searchService.quoteData?.d < 0" src="assets/RedArrowDown.png" alt="Red Arrow" class="img-fluid" style="max-width: 8%; height: auto;">
-                    <img *ngIf="searchService.quoteData?.d > 0" src="assets/GreenArrowUp.png" alt="Green Arrow" class="img-fluid" style="max-width: 8%; height: auto;">
-                    <p style="margin: 0;" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">{{searchService.quoteData?.d}} ({{searchService.quoteData?.dp}})</p>
+                    
+                    <i *ngIf="searchService.quoteData?.d > 0" class="bi bi-caret-up-fill" style="color: #198754;"></i>
+                    <i *ngIf="searchService.quoteData?.d < 0" class="bi bi-caret-down-fill" style="color: #dc3545;"></i>
+
+                    <p style="margin: 0;" [ngStyle]="{'color': (searchService.quoteData?.d > 0) ? '#198754' : (searchService.quoteData?.d < 0) ? '#dc3545' : '#000000'}">{{searchService.quoteData?.d}} ({{searchService.quoteData?.dp}}%)</p>
                 </div>
-                <div class="d-flex justify-content-center" style="text-align: center;">{{ formatTime(searchService.quoteData?.t) }}</div>
+                <div class="d-flex justify-content-center" style="text-align: center;">{{ searchService.currentTime }}</div>
               </div>
             </div>
         </div>
