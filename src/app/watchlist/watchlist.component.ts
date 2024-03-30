@@ -24,7 +24,7 @@ export class WatchlistComponent implements OnInit {
   private tickerClickedSubscription: Subscription | undefined;
 
   
-  constructor(private service: AppServiceService, public searchService: SearchService, private route: ActivatedRoute, public spinnerService: ResultSpinnerService){}
+  constructor(private service: AppServiceService, public searchService: SearchService, private route: ActivatedRoute, public spinnerService: ResultSpinnerService, private router: Router){}
 
   public watchlistList: any[] = [];
   completeArray: any[] = []; //array to keep watchlist items along with thier quote data
@@ -41,7 +41,7 @@ export class WatchlistComponent implements OnInit {
 
   async fetchWatchlist(){
     let data = await this.service.getFavoriteStocks2();
-    console.log('favorite stocks data is:', data);
+    //console.log('favorite stocks data is:', data);
     if (data){
       this.searchService.favoriteStocks = data;
       this.watchlistList = this.searchService.favoriteStocks;
@@ -62,11 +62,11 @@ export class WatchlistComponent implements OnInit {
     try{
       this.completeArray = [];
       await this.fetchWatchlist();
-      console.log('favorite stock list is:', this.searchService.favoriteStocks);
+      //console.log('favorite stock list is:', this.searchService.favoriteStocks);
       if (this.searchService.favoriteStocks && Object.keys(this.searchService.favoriteStocks).length > 0){
         for (const item of this.searchService.favoriteStocks){
           let quoteData: any = await this.service.getStockQuote2(item.tickerSymbol);
-          console.log('quote data is:', quoteData);
+          //console.log('quote data is:', quoteData);
           //caclulating the values dynamically
           let curPrice = quoteData.c;
           let change = quoteData.d;
@@ -77,12 +77,12 @@ export class WatchlistComponent implements OnInit {
 
           this.completeArray.push(curItem);
         }
-        console.log('updated completearray is: ', this.completeArray);
+        //console.log('updated completearray is: ', this.completeArray);
       } else{
-        console.log('no item found in watchlist');
+        //console.log('no item found in watchlist');
       }
     } catch(error){
-      console.log('Error fetching watchlist data', error);
+      //console.log('Error fetching watchlist data', error);
     } finally {
       this.isWatchlistLoading = false;
     }
@@ -109,13 +109,15 @@ export class WatchlistComponent implements OnInit {
         
       },
       (error: any) => {
-        console.error('Error removing from watchlist:', error);
+        //console.error('Error removing from watchlist:', error);
       }
     );
   }
 
   searchClickedTicker(ticker: string){
-    console.log("div clicked", ticker);
-    this.searchService.sendTickerClicked(ticker);
+    console.log("watchlist div clicked", ticker);
+    
+    this.router.navigate([`search/${ticker}`]);
+    //this.searchService.sendTickerClicked(ticker);
   }
 }

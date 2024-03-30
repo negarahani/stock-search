@@ -72,7 +72,7 @@ export class SummaryTabComponent {
     //console.log('toDate is', this.toDateFormatted);
     
     let data = await this.service.getHourlyPrice(ticker, this.fromDateFormatted, this.toDateFormatted);
-    console.log('hourly price data from service is',data);
+    //console.log('hourly price data from service is',data);
     if (data){
       this.resultsData = (data as { results: any }).results;
       //console.log(this.resultsData);
@@ -125,7 +125,7 @@ export class SummaryTabComponent {
 
 
   searchClickedTicker(ticker: string){
-    console.log('peer item was clicked. peer:', ticker);
+    //console.log('peer item was clicked. peer:', ticker);
     this.searchService.sendTickerClicked(ticker);
   }
 

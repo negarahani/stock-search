@@ -1,5 +1,5 @@
 
-import { Component, OnChanges, ViewChild, input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnChanges, ViewChild, input, OnDestroy, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppServiceService } from '../app-service.service';
 import { SearchResultsComponent } from './search-results/search-results.component';
@@ -11,8 +11,7 @@ import { EventEmitter,Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import './search-home.component.css'; 
 import { ResultSpinnerService } from '../result-spinner.service';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+
 
 
 
@@ -29,6 +28,9 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
   isCompanyDataLoading: boolean = false;
   isQuoteDataLoading: boolean = false;
   
+  private activatedRoute = inject(ActivatedRoute);
+    tickerInUrl = this.activatedRoute.snapshot.params['ticker'];
+
 
   private tickerClickedSubscription: Subscription | undefined;
 
@@ -67,7 +69,13 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     console.log('current string path is', this.searchService.pathString);
 
 
+
     this.initForm();
+
+    if (this.tickerInUrl !== 'home') {
+      this.formGroup.get('tickerValue')?.setValue(this.tickerInUrl);
+      this.searchTicker(this.tickerInUrl)
+    }
 
     /*************** Related to TickerClicked Subcription *****************/
     this.tickerClickedSubscription = this.searchService.tickerClicked$.subscribe(ticker => {
@@ -86,7 +94,7 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     //this.searchTicker(ticker);
     //resetting the autcomplete ?? not working
     this.ACArray = [];
-    console.log('AC array is:', this.ACArray);
+    //console.log('AC array is:', this.ACArray);
 
       // Clear previous interval if exists
     if (this.autoUpdateInterval) {
@@ -195,7 +203,7 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     console.log(this.searchService.pathString);
     console.log('The string path is,', this.searchService.pathString);
     if(this.searchService.pathString == "search/:ticker" && !this.resultsCleared){
-      this.getCompanyDataForAU(inputValue);
+      //this.getCompanyDataForAU(inputValue);
       this.getquoteDataForAU(inputValue);
 
       //update the current timestamp
@@ -318,6 +326,8 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
 
   clearResults(){
 
+    this.router.navigate(['search/home']);
+
     this.isACLoading = false; // spinner has to go when we clear data (or initiate search)
 
     console.log('results cleared');
@@ -359,7 +369,7 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     }
 
     if (this.tickerClickedSubscription) {
-      //this.tickerClickedSubscription.unsubscribe();
+      this.tickerClickedSubscription.unsubscribe();
       //console.log('unsubscribed from tickerClickedSubscription');
     }
 

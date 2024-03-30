@@ -75,11 +75,11 @@ export class InsightsTabComponent implements OnInit{
               positiveChange: positiveChange,
               negativeChange: negativeChange
           };
-          console.log('processed sentiment data is', this.sentimentsDataProcessed);
+          //console.log('processed sentiment data is', this.sentimentsDataProcessed);
       }
     }
     catch(error){
-      console.log('Error fetching insdier sentiments data',error);
+      //console.log('Error fetching insdier sentiments data',error);
     }
   }
 
@@ -93,7 +93,7 @@ export class InsightsTabComponent implements OnInit{
         return data;
       }
     } catch (error) {
-      console.error('Error fetching recommendations data:', error);
+      //console.error('Error fetching recommendations data:', error);
     }
     return null;
   }

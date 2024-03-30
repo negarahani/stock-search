@@ -109,10 +109,10 @@ formatTime(timestamp: number){
     // Subscribe to getFavoriteStocks here
     this.service.getFavoriteStocks().subscribe(
       (data: any) => {
-        console.log('subscribed to getFavoriteStocks');
+        //console.log('subscribed to getFavoriteStocks');
           this.searchService.favoriteStocks = data;
-          console.log('searched ticker is:', this.searchService.searchedTicker);
-          console.log('favoritestocks is:', this.searchService.favoriteStocks);
+          //console.log('searched ticker is:', this.searchService.searchedTicker);
+          //console.log('favoritestocks is:', this.searchService.favoriteStocks);
           this.searchService.favoriteStocks.forEach(item => {
           if (item.tickerSymbol == this.searchService.searchedTicker){
             this.isInWatchList = true;
@@ -121,11 +121,11 @@ formatTime(timestamp: number){
             this.starFill = 'yellow';
           }
         });
-        console.log('isinwatchlist value is:', this.isInWatchList);
+        //console.log('isinwatchlist value is:', this.isInWatchList);
           
       },
       (error: any) => {
-          console.error('Error fetching favorite stocks:', error);
+          //console.error('Error fetching favorite stocks:', error);
       }
   );
   }
@@ -148,7 +148,7 @@ formatTime(timestamp: number){
             
           },
           error => {
-            console.error('Error adding favorite stock:', error);
+            //console.error('Error adding favorite stock:', error);
           }
         );
       }
@@ -168,7 +168,7 @@ formatTime(timestamp: number){
 
           },
           error => {
-            console.error('Error removing favorite stock:', error);
+            //console.error('Error removing favorite stock:', error);
           }
         );
       }
@@ -185,7 +185,7 @@ formatTime(timestamp: number){
       this.searchService.cashBalance = data[0].cash_balance;
       //console.log('Cash balance is:', this.searchService.cashBalance);
     } else {
-      console.log('No balance data found.');
+      //console.log('No balance data found.');
     }
   }
 
@@ -207,8 +207,8 @@ formatTime(timestamp: number){
           this.portfolioCurTotalCost = item.total_cost;
         }
     });
-    console.log('portfoliolist is:', this.searchService.portfolioList);
-    console.log('isinportfolio value is:', this.isInPortfolio);
+    //console.log('portfoliolist is:', this.searchService.portfolioList);
+    //console.log('isinportfolio value is:', this.isInPortfolio);
     }
   }
 
@@ -219,7 +219,7 @@ formatTime(timestamp: number){
     let quoteData: any = await this.service.getStockQuote2(this.searchService.searchedTicker);
     this.portfolioCurPrice = quoteData.c;
     this.portfolioName = companyData.name;
-    console.log('companyData in fetchporfoliodata is:', companyData);
+    //console.log('companyData in fetchporfoliodata is:', companyData);
   }
   
   async buyStock(){
@@ -259,7 +259,7 @@ formatTime(timestamp: number){
            
       });
   } else {
-    console.error('Form control not found');
+    //console.error('Form control not found');
   }
   
   }

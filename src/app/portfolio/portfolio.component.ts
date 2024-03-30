@@ -81,12 +81,12 @@ export class PortfolioComponent implements OnInit {
       let data: any = await this.service.getBalanceData();
       if (data.length > 0) { // Check if data array is not empty
         this.searchService.cashBalance = data[0].cash_balance;
-        console.log('Cash balance is:', this.searchService.cashBalance);
+        //console.log('Cash balance is:', this.searchService.cashBalance);
       } else {
-        console.log('No balance data found.');
+        //console.log('No balance data found.');
       }
     } catch(error){
-      console.error('Error fetching balance data:', error);
+      //console.error('Error fetching balance data:', error);
     } finally {
       this.isBalanceLoading = false; 
     }
@@ -96,7 +96,7 @@ export class PortfolioComponent implements OnInit {
   async fetchData(){
 
     let data = await this.service.getPortfolio();
-    console.log(data);
+    //console.log(data);
     if (data){
       this.searchService.portfolioList = data;
 
@@ -116,7 +116,7 @@ export class PortfolioComponent implements OnInit {
       this.completeArray = [];
 
       await this.fetchData();
-      console.log("portfolio list is", this.searchService.portfolioList);
+      //console.log("portfolio list is", this.searchService.portfolioList);
 
       if (this.searchService.portfolioList && Object.keys(this.searchService.portfolioList).length > 0){
         for (const item of this.searchService.portfolioList){
@@ -188,7 +188,7 @@ export class PortfolioComponent implements OnInit {
            
       });
   } else {
-    console.error('Form control not found');
+    //console.error('Form control not found');
   }
 
 }

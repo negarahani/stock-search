@@ -46,11 +46,11 @@ export class NewsTabComponent implements OnInit{
         }
       }
 
-      console.log('Top 20 valid news data:', validNews);
+      //console.log('Top 20 valid news data:', validNews);
       this.filteredNews = validNews;
       }
     } catch (error) {
-      console.error('Error fetching top news data:', error);
+      //console.error('Error fetching top news data:', error);
     }
     
   }

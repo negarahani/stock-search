@@ -44,9 +44,11 @@ export class SearchService {
   sendTickerClicked(ticker: string) {
    
       this.tickerClickedSource.next(ticker);
+      console.log('inside search service');
     }
     
     shouldDoAutoUpdate() {
+      
       return this.shouldAutoUpdate;
     }
     toggleAutoUpdate(flag: boolean) {

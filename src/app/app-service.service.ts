@@ -11,7 +11,7 @@ export class AppServiceService {
 
 
   private baseUrl = 'http://localhost:8080/';
-  //private baseUrl = '/' //added in when preparing for deployment
+  // private baseUrl = '/' //added in when preparing for deployment
   
 
   autoUpdateInterval  : any;
