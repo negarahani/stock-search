@@ -39,11 +39,11 @@
   
 <div class="row">
     <div class="col-lg-6" *ngFor="let newsItem of filteredNews">
-        <div class="box">
-            <div class="card mb-3" data-bs-toggle="modal" data-bs-target="#newsModal" (click)="this.selectedItem = newsItem;" role="button">
+        <div class="box d-flex h-100">
+            <div class="card mb-3 w-100" data-bs-toggle="modal" data-bs-target="#newsModal" (click)="this.selectedItem = newsItem;" role="button">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img [src]="newsItem.image" class="img-fluid rounded-start" alt="News Image" style="padding: 10px;">
+                        <img [src]="newsItem.image" class="img-fluid rounded-start h-100" alt="News Image" style="padding: 10px;">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -63,7 +63,7 @@
             <div class="modal-header">
                 <div>
                     <h2 class="modal-title" id="exampleModalLabel">{{ selectedItem?.source }} </h2>
-                    <p >{{ formatDate(selectedItem?.datetime) }}</p>
+                    <p style="color: #696969">{{ formatDate(selectedItem?.datetime) }}</p>
                 </div>
                 
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -71,7 +71,7 @@
             <div class="modal-body">
                 <h2 class="modal-title" id="exampleModalLabel">{{ selectedItem?.headline }}</h2>
                 <p>{{ selectedItem?.summary }}</p>
-                <div>For more details click <a target="_blank" href="{{selectedItem?.url}}">here</a></div>
+                <div style="color: #808080;">For more details click <a target="_blank" href="{{selectedItem?.url}}">here</a></div>
             </div>
             <div class="card" style="margin: 10px;">
                 <div class="card-body">

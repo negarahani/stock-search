@@ -119,6 +119,7 @@ export class InsightsTabComponent implements OnInit{
       { name: 'Strong Sell', data: this.recomData.map((item:any) => item.strongSell), color: '#800000' }
     ];
 
+    
     //console.log('categories',categories);
     //console.log('series',series);
 
@@ -165,7 +166,18 @@ export class InsightsTabComponent implements OnInit{
       },
       plotOptions: {
         column: {
-          stacking: 'normal'
+          stacking: 'normal', 
+          dataLabels: {
+            enabled: true,
+            inside: true, 
+            formatter: function () {
+                return this.y; 
+            },
+            style: {
+                fontWeight: 'bold',
+                color: 'white'
+            }
+          }
         }
       },
       scrollbar: {
