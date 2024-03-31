@@ -24,6 +24,8 @@ import { ResultSpinnerService } from '../result-spinner.service';
 })
 export class SearchHomeComponent implements OnDestroy, OnInit{
 
+  
+
   //realted to spinner
   isCompanyDataLoading: boolean = false;
   isQuoteDataLoading: boolean = false;
@@ -158,6 +160,20 @@ export class SearchHomeComponent implements OnDestroy, OnInit{
     this.searchService.searchedTicker = searchInputValue; //will this work? yes!
     console.log('Type of searchedTicker:', typeof this.searchService.searchedTicker);
     console.log('searched ticker is:',this.searchService.searchedTicker);
+
+    if (!this.searchService.searchedTicker || this.searchService.searchedTicker.trim() === '') { // Check if search input is empty
+      
+      console.log('input is empty', this.searchService.searchedTicker);
+      this.searchService.showEmptyInputError = true;
+      this.searchService.responseData = []; //manully setting it to empty so that we can show the results section
+      if (this.resultsCleared) {
+        this.resultsCleared = false};
+
+      return; 
+  }
+
+    this.searchService.showEmptyInputError = false;
+
 
 
     //resetting the autcomplete ?? not working

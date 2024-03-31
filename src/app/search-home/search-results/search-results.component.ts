@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 })
 export class SearchResultsComponent implements OnChanges, OnInit{
 
+
   //related to Watchlist
   isInWatchList: boolean = false;
   starFill: string = 'white';
@@ -327,7 +328,7 @@ formatTime(timestamp: number){
   async finalSell(){
 
     let finalQuantityToSell = this.portfolioCurQuantity - this.quantityToSell;
-    let finalTotalCost = this.portfolioCurTotalCost - this.totalCostToBuy; 
+    let finalTotalCost = this.portfolioCurTotalCost - this.totalCostToSell; 
     
     if(finalQuantityToSell == 0){
       await this.service.deletePortfolioItem(this.searchService.searchedTicker);

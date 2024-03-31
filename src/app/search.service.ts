@@ -9,6 +9,8 @@ export class SearchService {
 
   constructor(private datePipe: DatePipe) {}
 
+  showEmptyInputError: boolean = false;
+
   //data related to home 
   searchedTicker: string = '';
   responseData: any;

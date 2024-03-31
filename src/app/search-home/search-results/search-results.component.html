@@ -1,5 +1,5 @@
 
-<div #results_section *ngIf="isDataAvailable() else error_section">
+<div #results_section *ngIf="isDataAvailable(); else (searchService.showEmptyInputError ? empty_input_error : error_section)">
     <div #Top_Row>
 
         <!-- Buy Modal -->
@@ -25,7 +25,7 @@
                 <div style="color:red; margin-left: 20px;" *ngIf="showBuyError">Not enough money in wallet!</div>
                 <div class="modal-footer" style="display: flex; justify-content: space-between;">
                 <div>total: {{this.totalCostToBuy  | number:'1.2-2'}}</div>
-                <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalBuy()" [disabled]="this.hideBuyButton">Buy</button></div>
+                <div><button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="finalBuy()" [disabled]="this.hideBuyButton">Buy</button></div>
                 </div>
             </div>
             </div>
@@ -54,7 +54,7 @@
                 <div style="color:red; margin-left: 20px;" *ngIf="showSellError">You cannot sell the stocks that you don't have!</div>
                 <div class="modal-footer" style="display: flex; justify-content: space-between;">
                 <div>total: {{this.totalCostToSell  | number:'1.2-2'}}</div>
-                <div><button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="finalSell()" [disabled]="this.hideSellButton">Sell</button></div>
+                <div><button type="button" class="btn btn-success" data-bs-dismiss="modal" (click)="finalSell()" [disabled]="this.hideSellButton">Sell</button></div>
                 </div>
             </div>
             </div>
@@ -177,4 +177,13 @@
         </div>
     </div>
 </ng-template>
+
+<ng-template #empty_input_error>
+    <div class="box" >
+        <div class="alert alert-danger container col-lg-10" role="alert" style="text-align: center; margin-top: 50px;">
+        
+            Please enter a valid Ticker.
+        </div>
+    </div>
+</ng-template >
 

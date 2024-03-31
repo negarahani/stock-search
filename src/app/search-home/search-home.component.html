@@ -1,5 +1,5 @@
 
-<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css">
 <div style="text-align: center;">
     <h3 style="font-size: 30px; font-weight: lighter; margin-top: 50px;">STOCK SEARCH</h3>
 </div>
@@ -31,6 +31,8 @@
             </button>
         </div>
     </mat-form-field>
+
+    
 </form>
 
 
@@ -47,9 +49,17 @@
 
 <div *ngIf="!!spinnerService.spinnerCounter$"> -->
 
-<div *ngIf="!isCompanyDataLoading && !isQuoteDataLoading">
+
+   
+
+
+
+
+<div *ngIf="!isCompanyDataLoading && !isQuoteDataLoading" >
     <app-search-results #search_results *ngIf="searchService.responseData && !this.resultsCleared"></app-search-results>
 </div>
+
+
 
 
 

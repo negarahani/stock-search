@@ -35,14 +35,24 @@ export class SummaryTabComponent {
   async getCompanyPeersData(ticker: string){
     let data: any = await this.service.getCompanyPeers(ticker);
     if (data){
-      //console.log('peers data is:', data);
-      this.peersArray = data;
+      //filter out the ones that have dot in them
+      this.peersArray = data.filter((peer: string) => !peer.includes('.'));
+      //console.log('peers data is:', this.peersArray);
     }
   }
 
 
   async createChart(ticker: string) {
     await this.getHourlyPriceData(ticker);
+
+    let lineColor = '#000000'; // Default color black
+    if (this.searchService.quoteData.d > 0) {
+      lineColor = '#198754'; 
+    } else if (this.searchService.quoteData.d < 0) {
+      lineColor = '#dc3545'; 
+    }
+
+
     this.stock = new StockChart({
       title: {
         text: `${this.searchService.searchedTicker} Hourly Price Variation` 
@@ -59,7 +69,8 @@ export class SummaryTabComponent {
       series: [{
         type: 'line',
         name: `${this.searchService.searchedTicker}`,
-        data: this.priceArray
+        data: this.priceArray,
+        color: lineColor
       }]
     });
   }

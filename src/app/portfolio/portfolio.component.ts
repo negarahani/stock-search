@@ -135,7 +135,7 @@ export class PortfolioComponent implements OnInit {
           
 
         }
-        //console.log('updated completearray is: ', this.completeArray);
+        console.log('updated completearray is: ', this.completeArray);
       } else {
         //console.log('no item found in portfolio');
       }
