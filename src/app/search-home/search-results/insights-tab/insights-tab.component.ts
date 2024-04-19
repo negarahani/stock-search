@@ -196,7 +196,7 @@ async getEarningsData(tickerSymbol: string){
       return data;
     }
   } catch (error) {
-    console.error('Error fetching recommendations data:', error);
+    console.error('Error fetching earnings data:', error);
   }
   return null;
 }
