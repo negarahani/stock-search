@@ -1,7 +1,7 @@
 # Stock Search Angular Application
 
 ## Overview
-This project is a stock search application built using Angular, Node.js, AJAX, and JSON technologies, with a focus on creating a responsive design using HTML5 and Bootstrap. The backend is powered by Node.js hosted on cloud services (GA/AWS/Azure), and data is managed using MongoDB Atlas. It is a singlge-page application (SPA) that primarily operates on a single HTML page, with content dynamically loaded and updated using Angular, without requiring full page reloads.
+This project is a stock search application built using Angular, Node.js, AJAX, and JSON technologies, with a focus on creating a responsive design using HTML5 and Bootstrap. The backend is powered by Node.js hosted on cloud services (GA/AWS/Azure), and data is managed using MongoDB Atlas. It is a single-page application (SPA) that primarily operates on a single HTML page, with content dynamically loaded and updated using Angular, without requiring full page reloads.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.2.3.
 
